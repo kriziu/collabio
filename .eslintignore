@@ -1,0 +1,7 @@
+node_modules
+out
+build
+.next
+
+tailwind.config.js
+postcss.config.js
