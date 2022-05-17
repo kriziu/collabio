@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
 import { createServer } from 'http';
 
+import {} from '@/common/types/global';
+
 import express from 'express';
 import next, { NextApiHandler } from 'next';
-// import { Server } from 'socket.io';
+import { Server } from 'socket.io';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -14,24 +16,24 @@ nextApp.prepare().then(async () => {
   const app = express();
   const server = createServer(app);
 
-  // const io = new Server(server);
+  const io = new Server<ClientToServerEvents, ServerToClientEvents>(server);
 
-  // app.get('/hello', async (_, res) => {
-  //   res.send('Hello World');
-  // });
+  app.get('/hello', async (_, res) => {
+    res.send('Hello World');
+  });
 
-  // io.on('connection', socket => {
-  //   console.log('connection');
-  //   socket.emit('status', 'Hello from Socket.io');
+  io.on('connection', (socket) => {
+    console.log('connection');
 
-  //   socket.on('send', data => {
-  //     socket.broadcast.emit('new_message', data);
-  //   });
+    socket.on('draw', (moves, options) => {
+      console.log('drawing');
+      socket.broadcast.emit('socket_draw', moves, options);
+    });
 
-  //   socket.on('disconnect', () => {
-  //     console.log('client disconnected');
-  //   });
-  // });
+    socket.on('disconnect', () => {
+      console.log('client disconnected');
+    });
+  });
 
   app.all('*', (req: any, res: any) => nextHandler(req, res));
 
