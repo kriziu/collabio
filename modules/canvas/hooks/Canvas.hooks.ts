@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { socket } from '../lib/socket';
+import { socket } from '@/common/lib/socket';
+import { useOptions } from '@/common/recoil/options';
 
 let moves: [number, number][] = [];
 
 export const useDraw = (
-  options: CtxOptions,
-  ctx?: CanvasRenderingContext2D
+  ctx: CanvasRenderingContext2D | undefined,
+  blocked: boolean,
+  movedX: number,
+  movedY: number,
+  handleEnd: () => void
 ) => {
+  const options = useOptions();
+
   const [drawing, setDrawing] = useState(false);
 
   useEffect(() => {
@@ -20,14 +26,22 @@ export const useDraw = (
   });
 
   const handleStartDrawing = (x: number, y: number) => {
-    if (!ctx) return;
+    if (!ctx || blocked) return;
 
-    moves = [[x, y]];
+    moves = [[x + movedX, y + movedY]];
     setDrawing(true);
 
     ctx.beginPath();
-    ctx.lineTo(x, y);
+    ctx.lineTo(x + movedX, y + movedY);
     ctx.stroke();
+  };
+
+  const handleDraw = (x: number, y: number) => {
+    if (ctx && drawing && !blocked) {
+      moves.push([x + movedX, y + movedY]);
+      ctx.lineTo(x + movedX, y + movedY);
+      ctx.stroke();
+    }
   };
 
   const handleEndDrawing = () => {
@@ -37,14 +51,7 @@ export const useDraw = (
 
     setDrawing(false);
     ctx.closePath();
-  };
-
-  const handleDraw = (x: number, y: number) => {
-    if (ctx && drawing) {
-      moves.push([x, y]);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    }
+    handleEnd();
   };
 
   return {
