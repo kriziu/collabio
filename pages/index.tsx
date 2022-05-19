@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 
-import Canvas from '@/modules/canvas/components/Canvas';
+import Room from '@/modules/room/components/Room';
 
 const Home: NextPage = () => {
-  return <Canvas />;
+  return <Room />;
 };
 
 export default Home;

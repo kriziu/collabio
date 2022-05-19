@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { motion, useMotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useKeyPressEvent } from 'react-use';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
@@ -9,6 +9,7 @@ import { socket } from '@/common/lib/socket';
 
 import { drawFromSocket } from '../helpers/Canvas.helpers';
 import { useDraw } from '../hooks/Canvas.hooks';
+import { useBoardPosition } from '../hooks/useBoardPosition';
 import MiniMap from './Minimap';
 
 const Canvas = () => {
@@ -21,14 +22,13 @@ const Canvas = () => {
 
   const { width, height } = useViewportSize();
 
+  const { x, y } = useBoardPosition();
+
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
       setDragging(true);
     }
   });
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
 
   const copyCanvasToSmall = () => {
     if (canvasRef.current) {
@@ -47,8 +47,6 @@ const Canvas = () => {
   const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } = useDraw(
     ctx,
     dragging,
-    -x.get(),
-    -y.get(),
     copyCanvasToSmall
   );
 
@@ -102,7 +100,7 @@ const Canvas = () => {
   }, [ctx, drawing]);
 
   return (
-    <div className="h-full w-full overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden">
       <motion.canvas
         // SETTINGS
         ref={canvasRef}
@@ -139,8 +137,6 @@ const Canvas = () => {
       />
       <MiniMap
         ref={smallCanvasRef}
-        x={x}
-        y={y}
         dragging={dragging}
         setMovedMinimap={setMovedMinimap}
       />

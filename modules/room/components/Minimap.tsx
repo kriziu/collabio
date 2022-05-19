@@ -1,19 +1,21 @@
 import { Dispatch, forwardRef, SetStateAction, useEffect, useRef } from 'react';
 
-import { motion, MotionValue, useMotionValue } from 'framer-motion';
+import { motion, useMotionValue } from 'framer-motion';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useViewportSize } from '@/common/hooks/useViewportSize';
 
+import { useBoardPosition } from '../hooks/useBoardPosition';
+
 const MiniMap = forwardRef<
   HTMLCanvasElement,
   {
-    x: MotionValue<number>;
-    y: MotionValue<number>;
     dragging: boolean;
     setMovedMinimap: Dispatch<SetStateAction<boolean>>;
   }
->(({ x, y, dragging, setMovedMinimap }, ref) => {
+>(({ dragging, setMovedMinimap }, ref) => {
+  const { x, y } = useBoardPosition();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useViewportSize();
 

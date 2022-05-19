@@ -3,15 +3,19 @@ import { useEffect, useState } from 'react';
 import { socket } from '@/common/lib/socket';
 import { useOptions } from '@/common/recoil/options';
 
+import { useBoardPosition } from './useBoardPosition';
+
 let moves: [number, number][] = [];
 
 export const useDraw = (
   ctx: CanvasRenderingContext2D | undefined,
   blocked: boolean,
-  movedX: number,
-  movedY: number,
   handleEnd: () => void
 ) => {
+  const boardPosition = useBoardPosition();
+  const movedX = -boardPosition.x.get();
+  const movedY = -boardPosition.y.get();
+
   const options = useOptions();
 
   const [drawing, setDrawing] = useState(false);
