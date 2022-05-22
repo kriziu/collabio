@@ -1,6 +1,6 @@
 import { useUsersIds } from '@/common/recoil/users';
 
-import SocketMouse from './SocketMouse';
+import UserMouse from './UserMouse';
 
 const MousesRenderer = () => {
   const usersIds = useUsersIds();
@@ -8,7 +8,7 @@ const MousesRenderer = () => {
   return (
     <>
       {usersIds.map((userId) => {
-        return <SocketMouse userId={userId} key={userId} />;
+        return <UserMouse userId={userId} key={userId} />;
       })}
     </>
   );

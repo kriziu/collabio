@@ -1,47 +1,28 @@
-export const drawFromSocket = (
-  socketMoves: [number, number][],
-  socketOptions: CtxOptions,
-  ctx: CanvasRenderingContext2D,
-  afterDraw: () => void
-) => {
-  ctx.lineWidth = socketOptions.lineWidth;
-  ctx.strokeStyle = socketOptions.lineColor;
+export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
+  const { options, path } = move;
+
+  ctx.lineWidth = options.lineWidth;
+  ctx.strokeStyle = options.lineColor;
 
   ctx.beginPath();
-  socketMoves.forEach(([x, y]) => {
+  path.forEach(([x, y]) => {
     ctx.lineTo(x, y);
   });
 
   ctx.stroke();
   ctx.closePath();
-
-  afterDraw();
 };
 
 export const drawOnUndo = (
   ctx: CanvasRenderingContext2D,
-  savedMoves: [number, number][][],
-  users: { [key: string]: [number, number][][] }
+  savedMoves: Move[],
+  users: { [key: string]: Move[] }
 ) => {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   Object.values(users).forEach((user) => {
-    user.forEach((userMove) => {
-      ctx.beginPath();
-      userMove.forEach(([x, y]) => {
-        ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-      ctx.closePath();
-    });
+    user.forEach((move) => handleMove(move, ctx));
   });
 
-  savedMoves.forEach((movesArr) => {
-    ctx.beginPath();
-    movesArr.forEach(([x, y]) => {
-      ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    ctx.closePath();
-  });
+  savedMoves.forEach((move) => handleMove(move, ctx));
 };

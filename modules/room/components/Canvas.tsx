@@ -48,9 +48,11 @@ const Canvas = () => {
     handleEndDrawing,
     handleDraw,
     handleStartDrawing,
-    // drawing,
+    drawing,
     handleUndo,
   } = useDraw(ctx, dragging, copyCanvasToSmall);
+
+  useSocketDraw(ctx, drawing, copyCanvasToSmall);
 
   // SETUP
   useEffect(() => {
@@ -69,39 +71,6 @@ const Canvas = () => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [dragging]);
-
-  useSocketDraw(ctx, copyCanvasToSmall);
-
-  // SOCKETS DRAWING FUNCTIONS
-  // useEffect(() => {
-  //   let movesToDrawLater: [number, number][] = [];
-  //   let optionsToUseLater: CtxOptions = {
-  //     lineColor: '',
-  //     lineWidth: 0,
-  //   };
-
-  //   socket.on('socket_draw', (movesToDraw, socketOptions) => {
-  //     if (ctx && !drawing) {
-  //       drawFromSocket(movesToDraw, socketOptions, ctx, copyCanvasToSmall);
-  //     } else {
-  //       movesToDrawLater = movesToDraw;
-  //       optionsToUseLater = socketOptions;
-  //     }
-  //   });
-
-  //   return () => {
-  //     socket.off('socket_draw');
-
-  //     if (movesToDrawLater.length && ctx) {
-  //       drawFromSocket(
-  //         movesToDrawLater,
-  //         optionsToUseLater,
-  //         ctx,
-  //         copyCanvasToSmall
-  //       );
-  //     }
-  //   };
-  // }, [ctx, drawing]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
