@@ -15,6 +15,7 @@ const document = () => (
       />
     </Head>
     <body>
+      <div id="portal"></div>
       <Main />
       <NextScript />
     </body>
