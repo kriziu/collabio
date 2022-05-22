@@ -41,7 +41,8 @@ nextApp.prepare().then(async () => {
   };
 
   const leaveRoom = (roomId: string, socketId: string) => {
-    const room = rooms.get(roomId)!;
+    const room = rooms.get(roomId);
+    if (!room) return;
 
     const userMoves = room.users.get(socketId)!;
 
