@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 
-import Room from '@/modules/room/components/Room';
+import Home from '@/modules/home/components/Home';
 
-const Home: NextPage = () => {
-  return <Room />;
+const HomePage: NextPage = () => {
+  return <Home />;
 };
 
-export default Home;
+export default HomePage;

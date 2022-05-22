@@ -12,17 +12,23 @@ export declare global {
   type Room = Map<string, Move[]>;
 
   interface ServerToClientEvents {
-    joined: (room: string) => void;
+    joined: (roomId: string, failed?: boolean) => void;
+    room: (room: string) => void;
+    created: (roomId: string) => void;
     user_draw: (move: Move, userId: string) => void;
     user_undo(userId: string): void;
-    mouse_moved: (x: number, y: number, socketId: string) => void;
-    users_in_room: (socketIds: string[]) => void;
-    user_disconnected: (socketId: string) => void;
+    mouse_moved: (x: number, y: number, userId: string) => void;
+    new_user: (userId: string) => void;
+    user_disconnected: (userId: string) => void;
   }
 
   interface ClientToServerEvents {
     draw: (move: Move) => void;
     mouse_move: (x: number, y: number) => void;
     undo: () => void;
+    create_room: () => void;
+    join_room: (room: string) => void;
+    joined_room: () => void;
+    leave_room: () => void;
   }
 }
