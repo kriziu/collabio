@@ -7,12 +7,13 @@ import { socket } from '@/common/lib/socket';
 import { useOptions } from '@/common/recoil/options';
 import usersAtom, { useUsers } from '@/common/recoil/users';
 
-import { drawOnUndo, handleMove } from '../helpers/Canvas.helpers';
+import { drawAllMoves, handleMove } from '../helpers/Canvas.helpers';
 import { useBoardPosition } from './useBoardPosition';
 
+const movesWithourUser: Move[] = [];
 const savedMoves: Move[] = [];
 
-let moves: [number, number][] = [];
+let tempMoves: [number, number][] = [];
 
 export const useDraw = (
   ctx: CanvasRenderingContext2D | undefined,
@@ -43,7 +44,7 @@ export const useDraw = (
       savedMoves.pop();
       socket.emit('undo');
 
-      drawOnUndo(ctx, savedMoves, users);
+      drawAllMoves(ctx, movesWithourUser, savedMoves, users);
 
       handleEnd();
     }
@@ -71,6 +72,8 @@ export const useDraw = (
     ctx.beginPath();
     ctx.lineTo(getPos(x, movedX), getPos(y, movedY));
     ctx.stroke();
+
+    tempMoves.push([getPos(x, movedX), getPos(y, movedY)]);
   };
 
   const handleDraw = (x: number, y: number) => {
@@ -79,7 +82,7 @@ export const useDraw = (
     ctx.lineTo(getPos(x, movedX), getPos(y, movedY));
     ctx.stroke();
 
-    moves.push([getPos(x, movedX), getPos(y, movedY)]);
+    tempMoves.push([getPos(x, movedX), getPos(y, movedY)]);
   };
 
   const handleEndDrawing = () => {
@@ -90,14 +93,16 @@ export const useDraw = (
     ctx.closePath();
 
     const move: Move = {
-      path: moves,
+      path: tempMoves,
       options,
     };
 
     savedMoves.push(move);
-    moves = [];
+    tempMoves = [];
 
     socket.emit('draw', move);
+
+    drawAllMoves(ctx, movesWithourUser, savedMoves, users);
 
     handleEnd();
   };
@@ -119,21 +124,26 @@ export const useSocketDraw = (
   const setUsers = useSetRecoilState(usersAtom);
 
   useEffect(() => {
-    socket.emit('joined_room');
-  }, []);
+    if (ctx) socket.emit('joined_room');
+  }, [ctx]);
 
   useEffect(() => {
-    socket.on('room', (roomJSON) => {
-      const room: Room = new Map(JSON.parse(roomJSON));
+    socket.on('room', (room, usersToParse) => {
+      if (!ctx) return;
 
-      console.log(room);
+      const users = new Map<string, Move[]>(JSON.parse(usersToParse));
 
-      room.forEach((userMoves, userId) => {
-        if (ctx) userMoves.forEach((move) => handleMove(move, ctx));
-        handleEnd();
+      room.drawed.forEach((move) => {
+        handleMove(move, ctx);
+        movesWithourUser.push(move);
+      });
 
+      users.forEach((userMoves, userId) => {
+        userMoves.forEach((move) => handleMove(move, ctx));
         setUsers((prevUsers) => ({ ...prevUsers, [userId]: userMoves }));
       });
+
+      handleEnd();
     });
 
     return () => {
@@ -185,7 +195,7 @@ export const useSocketDraw = (
         newUsers[userId] = newUsers[userId].slice(0, -1);
 
         if (ctx) {
-          drawOnUndo(ctx, savedMoves, newUsers);
+          drawAllMoves(ctx, movesWithourUser, savedMoves, newUsers);
           handleEnd();
         }
 
