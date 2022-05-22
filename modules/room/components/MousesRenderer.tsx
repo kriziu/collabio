@@ -1,13 +1,15 @@
-import { useUsersIds } from '@/common/recoil/users';
+import { socket } from '@/common/lib/socket';
+import { useRoom } from '@/common/recoil/room';
 
 import UserMouse from './UserMouse';
 
 const MousesRenderer = () => {
-  const usersIds = useUsersIds();
+  const room = useRoom();
 
   return (
     <>
-      {usersIds.map((userId) => {
+      {[...room.users.keys()].map((userId) => {
+        if (userId === socket.id) return null;
         return <UserMouse userId={userId} key={userId} />;
       })}
     </>

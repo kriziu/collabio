@@ -1,4 +1,4 @@
-export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
+const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
   const { options, path } = move;
 
   ctx.lineWidth = options.lineWidth;
@@ -15,19 +15,21 @@ export const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
 
 export const drawAllMoves = (
   ctx: CanvasRenderingContext2D,
-  movesWithoutUser: Move[],
-  savedMoves: Move[],
-  users: { [key: string]: Move[] }
+  room: ClientRoom
 ) => {
+  const { users, movesWithoutUser, myMoves } = room;
+
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   movesWithoutUser.forEach((move) => {
     handleMove(move, ctx);
   });
 
-  Object.values(users).forEach((user) => {
-    user.forEach((move) => handleMove(move, ctx));
+  users.forEach((userMoves) => {
+    userMoves.forEach((move) => {
+      handleMove(move, ctx);
+    });
   });
 
-  savedMoves.forEach((move) => handleMove(move, ctx));
+  myMoves.forEach((move) => handleMove(move, ctx));
 };
