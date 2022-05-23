@@ -9,7 +9,7 @@ import RoomContextProvider from '../context/Room.context';
 import Canvas from './Canvas';
 import MousePosition from './MousePosition';
 import MousesRenderer from './MousesRenderer';
-import ToolBar from './ToolBar';
+import ToolBar from './toolbar/ToolBar';
 
 const Room = () => {
   const room = useRoom();
