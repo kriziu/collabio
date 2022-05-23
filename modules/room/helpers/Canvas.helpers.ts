@@ -17,7 +17,7 @@ export const drawAllMoves = (
   ctx: CanvasRenderingContext2D,
   room: ClientRoom
 ) => {
-  const { users, movesWithoutUser, myMoves } = room;
+  const { usersMoves, movesWithoutUser, myMoves } = room;
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -25,7 +25,7 @@ export const drawAllMoves = (
     handleMove(move, ctx);
   });
 
-  users.forEach((userMoves) => {
+  usersMoves.forEach((userMoves) => {
     userMoves.forEach((move) => {
       handleMove(move, ctx);
     });

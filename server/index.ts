@@ -28,23 +28,23 @@ nextApp.prepare().then(async () => {
     const room = rooms.get(roomId)!;
 
     if (!room.users.has(socketId)) {
-      room.users.set(socketId, [move]);
+      room.usersMoves.set(socketId, [move]);
     }
 
-    room.users.get(socketId)!.push(move);
+    room.usersMoves.get(socketId)!.push(move);
   };
 
   const undoMove = (roomId: string, socketId: string) => {
     const room = rooms.get(roomId)!;
 
-    room.users.get(socketId)!.pop();
+    room.usersMoves.get(socketId)!.pop();
   };
 
   const leaveRoom = (roomId: string, socketId: string) => {
     const room = rooms.get(roomId);
     if (!room) return;
 
-    const userMoves = room.users.get(socketId)!;
+    const userMoves = room.usersMoves.get(socketId)!;
 
     room.drawed.push(...userMoves);
 
@@ -64,7 +64,7 @@ nextApp.prepare().then(async () => {
 
     console.log('connected to server');
 
-    socket.on('create_room', () => {
+    socket.on('create_room', (username) => {
       let roomId: string;
       do {
         roomId = Math.random().toString(36).substring(2, 6);
@@ -74,15 +74,31 @@ nextApp.prepare().then(async () => {
 
       socket.join(roomId);
 
-      rooms.set(roomId, { users: new Map(), drawed: [] });
-      rooms.get(roomId)?.users.set(socket.id, []);
+      rooms.set(roomId, {
+        usersMoves: new Map([[socket.id, []]]),
+        drawed: [],
+        users: new Map([[socket.id, username]]),
+      });
 
       io.to(socket.id).emit('created', roomId);
     });
 
-    socket.on('join_room', (roomId: string) => {
-      if (rooms.has(roomId)) {
+    socket.on('check_room', (roomId) => {
+      console.log(roomId);
+      console.log(rooms.has(roomId));
+
+      if (rooms.has(roomId)) socket.emit('room_exists', true);
+      else socket.emit('room_exists', false);
+    });
+
+    socket.on('join_room', (roomId, username) => {
+      const room = rooms.get(roomId);
+
+      if (room) {
         socket.join(roomId);
+
+        room.users.set(socket.id, username);
+        room.usersMoves.set(socket.id, []);
 
         io.to(socket.id).emit('joined', roomId);
       } else io.to(socket.id).emit('joined', '', true);
@@ -96,13 +112,18 @@ nextApp.prepare().then(async () => {
       console.log(roomId);
 
       const room = rooms.get(roomId);
-      if (room) {
-        room.users.set(socket.id, []);
+      if (!room) return;
 
-        io.to(socket.id).emit('room', room, JSON.stringify([...room.users]));
+      io.to(socket.id).emit(
+        'room',
+        room,
+        JSON.stringify([...room.usersMoves]),
+        JSON.stringify([...room.users])
+      );
 
-        socket.broadcast.to(roomId).emit('new_user', socket.id);
-      }
+      socket.broadcast
+        .to(roomId)
+        .emit('new_user', socket.id, room.users.get(socket.id) || 'Anonymous');
     });
 
     socket.on('leave_room', () => {
