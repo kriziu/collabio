@@ -15,12 +15,17 @@ export declare global {
     users: Map<string, string>;
   };
 
+  interface User {
+    name: string;
+    color: string;
+  }
+
   interface ClientRoom {
     id: string;
     usersMoves: Map<string, Move[]>;
     movesWithoutUser: Move[];
     myMoves: Move[];
-    users: Map<string, string>;
+    users: Map<string, User>;
   }
 
   interface ServerToClientEvents {

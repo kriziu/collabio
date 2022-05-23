@@ -138,3 +138,11 @@ const Canvas = () => {
 };
 
 export default Canvas;
+
+// TODO:
+// 1. Czat
+// 2. Pokazywanie userów i ich kolorkow (cos jak takie koleczka co sa na necie odpalone w ui)
+// 3. Przyciski do undo na toolbarze
+// 4. Gumka
+// 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
+// 5. Rysowanie roznych figur

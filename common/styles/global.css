@@ -6,7 +6,7 @@
   @apply font-montserrat font-medium focus:outline-none focus:ring focus:ring-red-500;
 }
 
-@layer {
+@layer components {
   .btn-icon {
     @apply flex h-7 w-7 items-center justify-center rounded-md text-xl text-white transition-all hover:scale-125 active:scale-100;
   }
