@@ -6,7 +6,7 @@ import { useInterval, useMouse } from 'react-use';
 import { getPos } from '@/common/lib/getPos';
 import { socket } from '@/common/lib/socket';
 
-import { useBoardPosition } from '../hooks/useBoardPosition';
+import { useBoardPosition } from '../../hooks/useBoardPosition';
 
 const MousePosition = () => {
   const prevPosition = useRef({ x: 0, y: 0 });
@@ -22,7 +22,7 @@ const MousePosition = () => {
       socket.emit('mouse_move', getPos(docX, x), getPos(docY, y));
       prevPosition.current = { x: docX, y: docY };
     }
-  }, 25);
+  }, 150);
 
   return (
     <motion.div

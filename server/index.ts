@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createServer } from 'http';
 
 import {} from '@/common/types/global';
@@ -49,8 +48,6 @@ nextApp.prepare().then(async () => {
     room.drawed.push(...userMoves);
 
     room.users.delete(socketId);
-
-    console.log(room);
   };
 
   io.on('connection', (socket) => {
@@ -62,15 +59,11 @@ nextApp.prepare().then(async () => {
       return joinedRoom;
     };
 
-    console.log('connected to server');
-
     socket.on('create_room', (username) => {
       let roomId: string;
       do {
         roomId = Math.random().toString(36).substring(2, 6);
       } while (rooms.has(roomId));
-
-      console.log(roomId);
 
       socket.join(roomId);
 
@@ -84,9 +77,6 @@ nextApp.prepare().then(async () => {
     });
 
     socket.on('check_room', (roomId) => {
-      console.log(roomId);
-      console.log(rooms.has(roomId));
-
       if (rooms.has(roomId)) socket.emit('room_exists', true);
       else socket.emit('room_exists', false);
     });
@@ -105,11 +95,7 @@ nextApp.prepare().then(async () => {
     });
 
     socket.on('joined_room', () => {
-      console.log('joined room');
-
       const roomId = getRoomId();
-
-      console.log(roomId);
 
       const room = rooms.get(roomId);
       if (!room) return;
@@ -136,9 +122,15 @@ nextApp.prepare().then(async () => {
     socket.on('draw', (move) => {
       const roomId = getRoomId();
 
-      addMove(roomId, socket.id, move);
+      const timestamp = Date.now();
 
-      socket.broadcast.to(roomId).emit('user_draw', move, socket.id);
+      addMove(roomId, socket.id, { ...move, timestamp });
+
+      io.to(socket.id).emit('your_move', { ...move, timestamp });
+
+      socket.broadcast
+        .to(roomId)
+        .emit('user_draw', { ...move, timestamp }, socket.id);
     });
 
     socket.on('undo', () => {
@@ -153,19 +145,22 @@ nextApp.prepare().then(async () => {
       socket.broadcast.to(getRoomId()).emit('mouse_moved', x, y, socket.id);
     });
 
+    socket.on('send_msg', (msg) => {
+      io.to(getRoomId()).emit('new_msg', socket.id, msg);
+    });
+
     socket.on('disconnecting', () => {
       const roomId = getRoomId();
       leaveRoom(roomId, socket.id);
 
       io.to(roomId).emit('user_disconnected', socket.id);
-
-      console.log('disconnected from server');
     });
   });
 
   app.all('*', (req: any, res: any) => nextHandler(req, res));
 
   server.listen(port, () => {
+    // eslint-disable-next-line no-console
     console.log(`> Ready on http://localhost:${port}`);
   });
 });

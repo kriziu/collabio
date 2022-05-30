@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { useKeyPressEvent } from 'react-use';
@@ -8,13 +8,14 @@ import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { socket } from '@/common/lib/socket';
 import { useRoom } from '@/common/recoil/room';
 
-import { drawAllMoves } from '../helpers/Canvas.helpers';
-import { useBoardPosition } from '../hooks/useBoardPosition';
-import { useDraw } from '../hooks/useDraw';
-import { useSocketDraw } from '../hooks/useSocketDraw';
+import { drawAllMoves } from '../../helpers/Canvas.helpers';
+import { useBoardPosition } from '../../hooks/useBoardPosition';
+import { useDraw } from '../../hooks/useDraw';
+import { useSocketDraw } from '../../hooks/useSocketDraw';
+import Background from './Background';
 import MiniMap from './Minimap';
 
-const Canvas = () => {
+const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
   const room = useRoom();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,10 +74,15 @@ const Canvas = () => {
 
     window.addEventListener('keyup', handleKeyUp);
 
+    const undoBtn = undoRef.current;
+
+    undoBtn?.addEventListener('click', handleUndo);
+
     return () => {
       window.removeEventListener('keyup', handleKeyUp);
+      undoBtn?.removeEventListener('click', handleUndo);
     };
-  }, [dragging]);
+  }, [dragging, handleUndo, undoRef]);
 
   useEffect(() => {
     if (ctx) socket.emit('joined_room');
@@ -91,15 +97,12 @@ const Canvas = () => {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      <button className="absolute top-0" onClick={handleUndo}>
-        undo
-      </button>
       <motion.canvas
         // SETTINGS
         ref={canvasRef}
         width={CANVAS_SIZE.width}
         height={CANVAS_SIZE.height}
-        className={`bg-zinc-100 ${dragging && 'cursor-move'}`}
+        className={`absolute top-0 z-10 ${dragging && 'cursor-move'}`}
         style={{ x, y }}
         // DRAG
         drag={dragging}
@@ -128,6 +131,8 @@ const Canvas = () => {
           handleDraw(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
         }
       />
+      <Background />
+
       <MiniMap
         ref={smallCanvasRef}
         dragging={dragging}
@@ -140,9 +145,6 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 1. Czat
-// 2. Pokazywanie userów i ich kolorkow (cos jak takie koleczka co sa na necie odpalone w ui)
-// 3. Przyciski do undo na toolbarze
-// 4. Gumka
 // 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
 // 5. Rysowanie roznych figur
+// 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

@@ -6,10 +6,12 @@ import { BsCursorFill } from 'react-icons/bs';
 import { socket } from '@/common/lib/socket';
 import { useRoom } from '@/common/recoil/room';
 
-import { useBoardPosition } from '../hooks/useBoardPosition';
+import { useBoardPosition } from '../../hooks/useBoardPosition';
 
 const UserMouse = ({ userId }: { userId: string }) => {
   const { users } = useRoom();
+
+  const [msg, setMsg] = useState('');
 
   const boardPos = useBoardPosition();
   const [x, setX] = useState(boardPos.x.get());
@@ -24,8 +26,20 @@ const UserMouse = ({ userId }: { userId: string }) => {
       }
     });
 
+    const handleNewMsg = (msgUserId: string, newMsg: string) => {
+      if (msgUserId === userId) {
+        setMsg(newMsg);
+
+        setTimeout(() => {
+          setMsg('');
+        }, 3000);
+      }
+    };
+    socket.on('new_msg', handleNewMsg);
+
     return () => {
       socket.off('mouse_moved');
+      socket.off('new_msg', handleNewMsg);
     };
   }, [userId]);
 
@@ -46,9 +60,14 @@ const UserMouse = ({ userId }: { userId: string }) => {
       } pointer-events-none`}
       style={{ color: users.get(userId)?.color }}
       animate={{ x: pos.x + x, y: pos.y + y }}
-      transition={{ duration: 0.1, ease: 'linear' }}
+      transition={{ duration: 0.2, ease: 'linear' }}
     >
       <BsCursorFill className="-rotate-90" />
+      {msg && (
+        <p className="absolute top-full left-5 max-w-[15rem] overflow-hidden text-ellipsis rounded-md bg-zinc-900 p-1 px-3 text-white">
+          {msg}
+        </p>
+      )}
       <p className="ml-2">{users.get(userId)?.name || 'Anonymous'}</p>
     </motion.div>
   );

@@ -14,6 +14,11 @@
   .btn {
     @apply rounded-xl bg-black p-5 py-1 text-white transition-all hover:scale-105 active:scale-100;
   }
+
+  .overflow-overlay {
+    overflow-y: scroll;
+    overflow-y: overlay;
+  }
 }
 
 body {
@@ -68,4 +73,19 @@ input[type='range']::-ms-thumb {
   border-radius: 50%;
   background: #000;
   cursor: pointer;
+}
+
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+*::-webkit-scrollbar {
+  width: 6px !important;
+  position: absolute;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-black/75;
 }
