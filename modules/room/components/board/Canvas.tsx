@@ -118,7 +118,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
         onMouseDown={(e) => handleStartDrawing(e.clientX, e.clientY)}
         onMouseUp={handleEndDrawing}
         onMouseMove={(e) => {
-          handleDraw(e.clientX, e.clientY);
+          handleDraw(e.clientX, e.clientY, e.shiftKey);
         }}
         onTouchStart={(e) =>
           handleStartDrawing(
@@ -146,5 +146,4 @@ export default Canvas;
 
 // TODO:
 // 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
-// 5. Rysowanie roznych figur
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

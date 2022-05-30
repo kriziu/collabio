@@ -1,5 +1,3 @@
-// import { CANVAS_SIZE } from '@/common/constants/canvasSize';
-
 const handleMove = (move: Move, ctx: CanvasRenderingContext2D) => {
   const { options, path } = move;
 
