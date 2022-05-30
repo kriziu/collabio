@@ -1,6 +1,6 @@
 import { DEFAULT_EASE } from '@/common/constants/easings';
 
-export const ColorPickerAnimation = {
+export const EntryAnimation = {
   from: {
     y: -30,
     opacity: 0,

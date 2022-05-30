@@ -1,11 +1,18 @@
 export declare global {
+  type Shape = 'line' | 'circle' | 'rect';
+
   interface CtxOptions {
     lineWidth: number;
     lineColor: string;
     erase: boolean;
+    shape: Shape;
   }
 
   interface Move {
+    shape: Shape;
+    radius: number;
+    width: number;
+    height: number;
     path: [number, number][];
     options: CtxOptions;
     timestamp: number;

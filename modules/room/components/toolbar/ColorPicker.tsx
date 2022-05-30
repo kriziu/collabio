@@ -6,7 +6,7 @@ import { useClickAway } from 'react-use';
 
 import { useOptions } from '@/common/recoil/options/options.hooks';
 
-import { ColorPickerAnimation } from '../../animations/ColorPicker.animations';
+import { EntryAnimation } from '../../animations/Entry.animations';
 
 const ColorPicker = () => {
   const [options, setOptions] = useOptions();
@@ -28,7 +28,7 @@ const ColorPicker = () => {
         {opened && (
           <motion.div
             className="absolute top-0 left-14"
-            variants={ColorPickerAnimation}
+            variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"

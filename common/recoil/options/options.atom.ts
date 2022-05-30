@@ -6,5 +6,6 @@ export const optionsAtom = atom<CtxOptions>({
     lineColor: '#000000',
     lineWidth: 5,
     erase: false,
+    shape: 'line',
   },
 });

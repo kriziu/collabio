@@ -6,6 +6,8 @@ import { useClickAway } from 'react-use';
 
 import { useOptions } from '@/common/recoil/options';
 
+import { EntryAnimation } from '../../animations/Entry.animations';
+
 const LineWidthPicker = () => {
   const [options, setOptions] = useOptions();
 
@@ -24,7 +26,7 @@ const LineWidthPicker = () => {
         {opened && (
           <motion.div
             className="absolute top-[6px] left-14 w-36"
-            // variants={ColorPickerAnimation}
+            variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"

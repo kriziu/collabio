@@ -7,6 +7,7 @@ import { HiOutlineDownload } from 'react-icons/hi';
 import ColorPicker from './ColorPicker';
 import Eraser from './Eraser';
 import LineWidthPicker from './LineWidthPicker';
+import ShapeSelector from './ShapeSelector';
 
 const ToolBar = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
   return (
@@ -23,6 +24,7 @@ const ToolBar = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
       <div className="h-px w-full bg-white" />
 
       <ColorPicker />
+      <ShapeSelector />
       <LineWidthPicker />
       <Eraser />
       <button className="btn-icon text-xl">

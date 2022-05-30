@@ -6,6 +6,7 @@ import { useKeyPressEvent } from 'react-use';
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { socket } from '@/common/lib/socket';
+import { useOptionsValue } from '@/common/recoil/options';
 import { useRoom } from '@/common/recoil/room';
 
 import { drawAllMoves } from '../../helpers/Canvas.helpers';
@@ -17,6 +18,7 @@ import MiniMap from './Minimap';
 
 const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
   const room = useRoom();
+  const options = useOptionsValue();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const smallCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,10 +92,10 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
 
   useEffect(() => {
     if (ctx) {
-      drawAllMoves(ctx, room);
+      drawAllMoves(ctx, room, options);
       copyCanvasToSmall();
     }
-  }, [ctx, room]);
+  }, [ctx, options, room]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -145,5 +147,6 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
 export default Canvas;
 
 // TODO:
+// kwadrat, kolko, tekst
 // 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze
