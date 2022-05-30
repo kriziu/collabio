@@ -39,17 +39,6 @@ nextApp.prepare().then(async () => {
     room.usersMoves.get(socketId)!.pop();
   };
 
-  const leaveRoom = (roomId: string, socketId: string) => {
-    const room = rooms.get(roomId);
-    if (!room) return;
-
-    const userMoves = room.usersMoves.get(socketId)!;
-
-    room.drawed.push(...userMoves);
-
-    room.users.delete(socketId);
-  };
-
   io.on('connection', (socket) => {
     const getRoomId = () => {
       const joinedRoom = [...socket.rooms].find((room) => room !== socket.id);
@@ -57,6 +46,18 @@ nextApp.prepare().then(async () => {
       if (!joinedRoom) return socket.id;
 
       return joinedRoom;
+    };
+
+    const leaveRoom = (roomId: string, socketId: string) => {
+      const room = rooms.get(roomId);
+      if (!room) return;
+
+      const userMoves = room.usersMoves.get(socketId);
+
+      if (userMoves) room.drawed.push(...userMoves);
+      room.users.delete(socketId);
+
+      socket.leave(roomId);
     };
 
     socket.on('create_room', (username) => {

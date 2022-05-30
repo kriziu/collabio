@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { RefObject, useEffect } from 'react';
 
 import { motion } from 'framer-motion';
 
@@ -6,13 +6,11 @@ import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 
-const Background = () => {
+const Background = ({ bgRef }: { bgRef: RefObject<HTMLCanvasElement> }) => {
   const { x, y } = useBoardPosition();
 
-  const ref = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
-    const ctx = ref.current?.getContext('2d');
+    const ctx = bgRef.current?.getContext('2d');
 
     if (ctx) {
       ctx.fillStyle = '#fff';
@@ -34,11 +32,11 @@ const Background = () => {
         ctx.stroke();
       }
     }
-  }, []);
+  }, [bgRef]);
 
   return (
     <motion.canvas
-      ref={ref}
+      ref={bgRef}
       width={CANVAS_SIZE.width}
       height={CANVAS_SIZE.height}
       className="absolute top-0 bg-zinc-100"

@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { useKeyPressEvent } from 'react-use';
@@ -12,15 +12,17 @@ import { useRoom } from '@/common/recoil/room';
 import { drawAllMoves } from '../../helpers/Canvas.helpers';
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 import { useDraw } from '../../hooks/useDraw';
+import { useRefs } from '../../hooks/useRefs';
 import { useSocketDraw } from '../../hooks/useSocketDraw';
 import Background from './Background';
 import MiniMap from './Minimap';
 
-const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
+const Canvas = () => {
   const room = useRoom();
   const options = useOptionsValue();
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { canvasRef, bgRef, undoRef } = useRefs();
+
   const smallCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
@@ -37,7 +39,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
     }
   });
 
-  const copyCanvasToSmall = () => {
+  const copyCanvasToSmall = useCallback(() => {
     if (canvasRef.current && smallCanvasRef.current) {
       const smallCtx = smallCanvasRef.current.getContext('2d');
       if (smallCtx) {
@@ -51,7 +53,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
         );
       }
     }
-  };
+  }, [canvasRef, smallCanvasRef]);
 
   const {
     handleEndDrawing,
@@ -84,7 +86,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
       window.removeEventListener('keyup', handleKeyUp);
       undoBtn?.removeEventListener('click', handleUndo);
     };
-  }, [dragging, handleUndo, undoRef]);
+  }, [canvasRef, dragging, handleUndo, undoRef]);
 
   useEffect(() => {
     if (ctx) socket.emit('joined_room');
@@ -95,7 +97,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
       drawAllMoves(ctx, room, options);
       copyCanvasToSmall();
     }
-  }, [ctx, options, room]);
+  }, [copyCanvasToSmall, ctx, options, room]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -133,7 +135,7 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
           handleDraw(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
         }
       />
-      <Background />
+      <Background bgRef={bgRef} />
 
       <MiniMap
         ref={smallCanvasRef}

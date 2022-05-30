@@ -1,4 +1,4 @@
-import { createContext, ReactChild, useEffect } from 'react';
+import { createContext, ReactChild, RefObject, useEffect, useRef } from 'react';
 
 import { MotionValue, useMotionValue } from 'framer-motion';
 
@@ -10,6 +10,9 @@ import { useSetRoom } from '@/common/recoil/room/room.hooks';
 export const roomContext = createContext<{
   x: MotionValue<number>;
   y: MotionValue<number>;
+  undoRef: RefObject<HTMLButtonElement>;
+  canvasRef: RefObject<HTMLCanvasElement>;
+  bgRef: RefObject<HTMLCanvasElement>;
 }>(null!);
 
 const RoomContextProvider = ({ children }: { children: ReactChild }) => {
@@ -18,6 +21,10 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
+  const undoRef = useRef<HTMLButtonElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const bgRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     socket.on('room', (room, usersMovesToParse, usersToParse) => {
@@ -63,7 +70,9 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
   }, [handleAddUser, handleRemoveUser, setRoom]);
 
   return (
-    <roomContext.Provider value={{ x, y }}>{children}</roomContext.Provider>
+    <roomContext.Provider value={{ x, y, bgRef, undoRef, canvasRef }}>
+      {children}
+    </roomContext.Provider>
   );
 };
 
