@@ -147,6 +147,5 @@ const Canvas = ({ undoRef }: { undoRef: RefObject<HTMLButtonElement> }) => {
 export default Canvas;
 
 // TODO:
-// kwadrat, kolko, tekst
 // 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

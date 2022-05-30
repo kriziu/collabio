@@ -50,9 +50,9 @@ const ShapeSelector = () => {
           >
             <button
               className="btn-icon text-xl"
-              onClick={() => handleShapeChange('circle')}
+              onClick={() => handleShapeChange('line')}
             >
-              <FaCircle />
+              <BsPencilFill />
             </button>
 
             <button
@@ -64,9 +64,9 @@ const ShapeSelector = () => {
 
             <button
               className="btn-icon text-xl"
-              onClick={() => handleShapeChange('line')}
+              onClick={() => handleShapeChange('circle')}
             >
-              <BsPencilFill />
+              <FaCircle />
             </button>
           </motion.div>
         )}

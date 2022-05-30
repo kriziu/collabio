@@ -143,6 +143,8 @@ export const useDraw = (
     };
 
     tempMoves = [];
+    tempRadius = 0;
+    tempSize = { width: 0, height: 0 };
     ctx.globalCompositeOperation = 'source-over';
 
     socket.emit('draw', move);
