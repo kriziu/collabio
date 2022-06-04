@@ -1,4 +1,4 @@
-import { BsFillImageFill, BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots } from 'react-icons/bs';
 import { FaUndo } from 'react-icons/fa';
 import { HiOutlineDownload } from 'react-icons/hi';
 
@@ -7,6 +7,7 @@ import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useRefs } from '../../hooks/useRefs';
 import ColorPicker from './ColorPicker';
 import Eraser from './Eraser';
+import ImageChoser from './ImageChoser';
 import LineWidthPicker from './LineWidthPicker';
 import ShapeSelector from './ShapeSelector';
 
@@ -48,9 +49,7 @@ const ToolBar = () => {
       <ShapeSelector />
       <LineWidthPicker />
       <Eraser />
-      <button className="btn-icon text-xl">
-        <BsFillImageFill />
-      </button>
+      <ImageChoser />
       <button className="btn-icon text-xl">
         <BsThreeDots />
       </button>

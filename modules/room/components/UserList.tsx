@@ -4,7 +4,7 @@ const UserList = () => {
   const room = useRoom();
 
   return (
-    <div className="pointer-events-none absolute z-10 flex p-5">
+    <div className="pointer-events-none absolute z-30 flex p-5">
       {[...room.users.keys()].map((userId, index) => {
         return (
           <div

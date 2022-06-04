@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
 import { useKeyPressEvent } from 'react-use';
@@ -6,24 +6,17 @@ import { useKeyPressEvent } from 'react-use';
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { socket } from '@/common/lib/socket';
-import { useOptionsValue } from '@/common/recoil/options';
-import { useRoom } from '@/common/recoil/room';
 
-import { drawAllMoves } from '../../helpers/Canvas.helpers';
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 import { useDraw } from '../../hooks/useDraw';
+import { useMovesHandlers } from '../../hooks/useMovesHandlers';
 import { useRefs } from '../../hooks/useRefs';
 import { useSocketDraw } from '../../hooks/useSocketDraw';
 import Background from './Background';
 import MiniMap from './Minimap';
 
 const Canvas = () => {
-  const room = useRoom();
-  const options = useOptionsValue();
-
   const { canvasRef, bgRef, undoRef } = useRefs();
-
-  const smallCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
   const [dragging, setDragging] = useState(false);
@@ -33,35 +26,18 @@ const Canvas = () => {
 
   const { x, y } = useBoardPosition();
 
+  const { handleUndo, drawAllMoves } = useMovesHandlers();
+
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
       setDragging(true);
     }
   });
 
-  const copyCanvasToSmall = useCallback(() => {
-    if (canvasRef.current && smallCanvasRef.current) {
-      const smallCtx = smallCanvasRef.current.getContext('2d');
-      if (smallCtx) {
-        smallCtx.clearRect(0, 0, CANVAS_SIZE.width, CANVAS_SIZE.height);
-        smallCtx.drawImage(
-          canvasRef.current,
-          0,
-          0,
-          CANVAS_SIZE.width,
-          CANVAS_SIZE.height
-        );
-      }
-    }
-  }, [canvasRef, smallCanvasRef]);
-
-  const {
-    handleEndDrawing,
-    handleDraw,
-    handleStartDrawing,
-    drawing,
-    handleUndo,
-  } = useDraw(ctx, dragging);
+  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } = useDraw(
+    dragging,
+    drawAllMoves
+  );
 
   useSocketDraw(ctx, drawing);
 
@@ -91,13 +67,6 @@ const Canvas = () => {
   useEffect(() => {
     if (ctx) socket.emit('joined_room');
   }, [ctx]);
-
-  useEffect(() => {
-    if (ctx) {
-      drawAllMoves(ctx, room, options);
-      copyCanvasToSmall();
-    }
-  }, [copyCanvasToSmall, ctx, options, room]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
@@ -137,11 +106,7 @@ const Canvas = () => {
       />
       <Background bgRef={bgRef} />
 
-      <MiniMap
-        ref={smallCanvasRef}
-        dragging={dragging}
-        setMovedMinimap={setMovedMinimap}
-      />
+      <MiniMap dragging={dragging} setMovedMinimap={setMovedMinimap} />
     </div>
   );
 };
@@ -149,5 +114,5 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 4. Wstawianie obrazka (i moze przesuwanie?) to na jutro jak juz
+// 5. Responsywnosc
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

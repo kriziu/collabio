@@ -55,16 +55,16 @@ const UserMouse = ({ userId }: { userId: string }) => {
 
   return (
     <motion.div
-      className={`absolute top-0 left-0 text-blue-800 ${
+      className={`pointer-events-none absolute top-0 left-0 z-20 text-blue-800 ${
         pos.x === -1 && 'hidden'
-      } pointer-events-none`}
+      }`}
       style={{ color: users.get(userId)?.color }}
       animate={{ x: pos.x + x, y: pos.y + y }}
       transition={{ duration: 0.2, ease: 'linear' }}
     >
       <BsCursorFill className="-rotate-90" />
       {msg && (
-        <p className="absolute top-full left-5 max-w-[15rem] overflow-hidden text-ellipsis rounded-md bg-zinc-900 p-1 px-3 text-white">
+        <p className="absolute top-full left-5 max-h-20 max-w-[15rem] overflow-hidden text-ellipsis rounded-md bg-zinc-900 p-1 px-3 text-white">
           {msg}
         </p>
       )}
