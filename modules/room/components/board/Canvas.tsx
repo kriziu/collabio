@@ -26,7 +26,7 @@ const Canvas = () => {
 
   const { x, y } = useBoardPosition();
 
-  const { handleUndo, drawAllMoves } = useMovesHandlers();
+  const { handleUndo } = useMovesHandlers();
 
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
@@ -34,10 +34,8 @@ const Canvas = () => {
     }
   });
 
-  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } = useDraw(
-    dragging,
-    drawAllMoves
-  );
+  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } =
+    useDraw(dragging);
 
   useSocketDraw(ctx, drawing);
 
@@ -114,5 +112,7 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
+// 3. moze ctrl y? (localstorage)
+// 4. copy/paste
 // 5. Responsywnosc
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

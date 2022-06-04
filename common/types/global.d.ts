@@ -17,6 +17,7 @@ export declare global {
     timestamp: number;
     eraser: boolean;
     base64: string;
+    id: string;
   }
 
   type Room = {

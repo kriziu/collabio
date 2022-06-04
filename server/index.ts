@@ -5,6 +5,7 @@ import {} from '@/common/types/global';
 import express from 'express';
 import next, { NextApiHandler } from 'next';
 import { Server } from 'socket.io';
+import { uuid } from 'uuidv4';
 
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
@@ -124,6 +125,9 @@ nextApp.prepare().then(async () => {
       const roomId = getRoomId();
 
       const timestamp = Date.now();
+
+      // eslint-disable-next-line no-param-reassign
+      move.id = uuid();
 
       addMove(roomId, socket.id, { ...move, timestamp });
 
