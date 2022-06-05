@@ -9,9 +9,9 @@ import { socket } from '@/common/lib/socket';
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 
 const MousePosition = () => {
-  const prevPosition = useRef({ x: 0, y: 0 });
-
   const { x, y } = useBoardPosition();
+
+  const prevPosition = useRef({ x: 0, y: 0 });
 
   const ref = useRef<HTMLDivElement>(null);
 

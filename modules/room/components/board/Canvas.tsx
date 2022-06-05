@@ -17,27 +17,23 @@ import MiniMap from './Minimap';
 
 const Canvas = () => {
   const { canvasRef, bgRef, undoRef } = useRefs();
+  const { width, height } = useViewportSize();
+  const { x, y } = useBoardPosition();
+  const handleUndo = useMovesHandlers();
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
   const [dragging, setDragging] = useState(false);
   const [, setMovedMinimap] = useState(false);
 
-  const { width, height } = useViewportSize();
-
-  const { x, y } = useBoardPosition();
-
-  const { handleUndo } = useMovesHandlers();
+  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } =
+    useDraw(dragging);
+  useSocketDraw(ctx, drawing);
 
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
       setDragging(true);
     }
   });
-
-  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } =
-    useDraw(dragging);
-
-  useSocketDraw(ctx, drawing);
 
   // SETUP
   useEffect(() => {
@@ -112,7 +108,7 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 3. moze ctrl y? (localstorage)
-// 4. copy/paste
+// 3. ctrl y
+// 4. copy/paste (localstorage)
 // 5. Responsywnosc
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

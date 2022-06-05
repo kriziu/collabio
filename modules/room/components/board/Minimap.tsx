@@ -16,11 +16,10 @@ const MiniMap = ({
   setMovedMinimap: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { minimapRef } = useRefs();
-
   const { x, y } = useBoardPosition();
+  const { width, height } = useViewportSize();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const { width, height } = useViewportSize();
 
   const miniX = useMotionValue(0);
   const miniY = useMotionValue(0);

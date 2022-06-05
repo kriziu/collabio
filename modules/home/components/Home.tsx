@@ -9,13 +9,13 @@ import { useSetRoomId } from '@/common/recoil/room';
 import NotFoundModal from '../modals/NotFound';
 
 const Home = () => {
-  const [roomId, setRoomId] = useState('');
-  const [username, setUsername] = useState('');
+  const { openModal } = useModal();
   const setAtomRoomId = useSetRoomId();
 
-  const router = useRouter();
+  const [roomId, setRoomId] = useState('');
+  const [username, setUsername] = useState('');
 
-  const { openModal } = useModal();
+  const router = useRouter();
 
   useEffect(() => {
     socket.on('created', (roomIdFromServer) => {

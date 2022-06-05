@@ -11,9 +11,9 @@ import { useOptions } from '@/common/recoil/options';
 import { EntryAnimation } from '../../animations/Entry.animations';
 
 const ShapeSelector = () => {
-  const ref = useRef<HTMLDivElement>(null);
-
   const [options, setOptions] = useOptions();
+
+  const ref = useRef<HTMLDivElement>(null);
 
   const [opened, setOpened] = useState(false);
 

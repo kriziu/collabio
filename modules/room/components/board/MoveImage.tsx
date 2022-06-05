@@ -10,11 +10,10 @@ import { useRefs } from '../../hooks/useRefs';
 const MoveImage = () => {
   const { canvasRef } = useRefs();
   const { x, y } = useBoardPosition();
+  const { moveImage, setMoveImage } = useMoveImage();
 
   const imageX = useMotionValue(50);
   const imageY = useMotionValue(50);
-
-  const { moveImage, setMoveImage } = useMoveImage();
 
   const handlePlaceImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];

@@ -10,13 +10,11 @@ import { useBoardPosition } from '../../hooks/useBoardPosition';
 
 const UserMouse = ({ userId }: { userId: string }) => {
   const { users } = useRoom();
+  const boardPos = useBoardPosition();
 
   const [msg, setMsg] = useState('');
-
-  const boardPos = useBoardPosition();
   const [x, setX] = useState(boardPos.x.get());
   const [y, setY] = useState(boardPos.y.get());
-
   const [pos, setPos] = useState({ x: -1, y: -1 });
 
   useEffect(() => {

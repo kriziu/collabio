@@ -31,15 +31,15 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
   const { users } = useRoom();
   const { handleAddUser, handleRemoveUser } = useSetUsers();
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
   const undoRef = useRef<HTMLButtonElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<HTMLCanvasElement>(null);
   const minimapRef = useRef<HTMLCanvasElement>(null);
 
   const [moveImage, setMoveImage] = useState('');
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
 
   useEffect(() => {
     socket.on('room', (room, usersMovesToParse, usersToParse) => {
