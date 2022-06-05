@@ -60,9 +60,10 @@ export const useMovesHandlers = () => {
     ctx.lineWidth = moveOptions.lineWidth;
     ctx.strokeStyle = moveOptions.lineColor;
     if (move.eraser) ctx.globalCompositeOperation = 'destination-out';
+    else ctx.globalCompositeOperation = 'source-over';
 
     switch (moveOptions.shape) {
-      case 'line':
+      case 'line': {
         ctx.beginPath();
         path.forEach(([x, y]) => {
           ctx.lineTo(x, y);
@@ -71,20 +72,27 @@ export const useMovesHandlers = () => {
         ctx.stroke();
         ctx.closePath();
         break;
+      }
 
-      case 'circle':
+      case 'circle': {
+        const { cX, cY, radiusX, radiusY } = move.circle;
+
         ctx.beginPath();
-        ctx.arc(path[0][0], path[0][1], move.radius, 0, 2 * Math.PI);
+        ctx.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.closePath();
         break;
+      }
 
-      case 'rect':
+      case 'rect': {
+        const { width, height } = move.rect;
+
         ctx.beginPath();
-        ctx.rect(path[0][0], path[0][1], move.width, move.height);
+        ctx.rect(path[0][0], path[0][1], width, height);
         ctx.stroke();
         ctx.closePath();
         break;
+      }
 
       default:
         break;
@@ -104,7 +112,7 @@ export const useMovesHandlers = () => {
         .map((move) => {
           return new Promise<HTMLImageElement>((resolve) => {
             const img = new Image();
-            img.src = move.base64;
+            img.src = move.img.base64;
             img.id = move.id;
             img.addEventListener('load', () => resolve(img));
           });
@@ -137,7 +145,7 @@ export const useMovesHandlers = () => {
 
       if (lastMove.options.shape === 'image') {
         const img = new Image();
-        img.src = lastMove.base64;
+        img.src = lastMove.img.base64;
         img.addEventListener('load', () => drawMove(lastMove, img));
       } else drawMove(lastMove);
     }
