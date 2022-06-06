@@ -1,6 +1,6 @@
 import { savedMovesAtom } from './savedMoves.atom';
-import { useSavedMoves } from './savedMoves.hooks';
+import { useSavedMoves, useSetSavedMoves } from './savedMoves.hooks';
 
 export default savedMovesAtom;
 
-export { useSavedMoves };
+export { useSavedMoves, useSetSavedMoves };

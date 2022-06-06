@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { socket } from '@/common/lib/socket';
 import { useMyMoves, useRoom } from '@/common/recoil/room';
-import { useSavedMoves } from '@/common/recoil/savedMoves';
+import { useSetSavedMoves } from '@/common/recoil/savedMoves';
 
 import { useRefs } from './useRefs';
 
@@ -12,7 +12,7 @@ export const useMovesHandlers = () => {
   const { canvasRef, minimapRef } = useRefs();
   const room = useRoom();
   const { handleAddMyMove, handleRemoveMyMove } = useMyMoves();
-  const { addSavedMove, removeSavedMove } = useSavedMoves();
+  const { addSavedMove, removeSavedMove } = useSetSavedMoves();
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
 
@@ -196,5 +196,5 @@ export const useMovesHandlers = () => {
     };
   }, [handleUndo, handleRedo]);
 
-  return handleUndo;
+  return { handleUndo, handleRedo };
 };

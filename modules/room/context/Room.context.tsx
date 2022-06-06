@@ -19,6 +19,7 @@ export const roomContext = createContext<{
   x: MotionValue<number>;
   y: MotionValue<number>;
   undoRef: RefObject<HTMLButtonElement>;
+  redoRef: RefObject<HTMLButtonElement>;
   canvasRef: RefObject<HTMLCanvasElement>;
   bgRef: RefObject<HTMLCanvasElement>;
   minimapRef: RefObject<HTMLCanvasElement>;
@@ -32,6 +33,7 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
   const { handleAddUser, handleRemoveUser } = useSetUsers();
 
   const undoRef = useRef<HTMLButtonElement>(null);
+  const redoRef = useRef<HTMLButtonElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<HTMLCanvasElement>(null);
   const minimapRef = useRef<HTMLCanvasElement>(null);
@@ -101,6 +103,7 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
         y,
         bgRef,
         undoRef,
+        redoRef,
         canvasRef,
         setMoveImage,
         moveImage,

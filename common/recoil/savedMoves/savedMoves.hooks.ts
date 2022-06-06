@@ -1,8 +1,8 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { savedMovesAtom } from './savedMoves.atom';
 
-export const useSavedMoves = () => {
+export const useSetSavedMoves = () => {
   const setSavedMoves = useSetRecoilState(savedMovesAtom);
 
   const addSavedMove = (move: Move) => {
@@ -26,4 +26,10 @@ export const useSavedMoves = () => {
   };
 
   return { addSavedMove, removeSavedMove, clearSavedMoves };
+};
+
+export const useSavedMoves = () => {
+  const savedMoves = useRecoilValue(savedMovesAtom);
+
+  return savedMoves;
 };

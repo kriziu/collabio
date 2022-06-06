@@ -16,10 +16,10 @@ import Background from './Background';
 import MiniMap from './Minimap';
 
 const Canvas = () => {
-  const { canvasRef, bgRef, undoRef } = useRefs();
+  const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
   const { width, height } = useViewportSize();
   const { x, y } = useBoardPosition();
-  const handleUndo = useMovesHandlers();
+  const { handleUndo, handleRedo } = useMovesHandlers();
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
   const [dragging, setDragging] = useState(false);
@@ -49,14 +49,17 @@ const Canvas = () => {
     window.addEventListener('keyup', handleKeyUp);
 
     const undoBtn = undoRef.current;
+    const redoBtn = redoRef.current;
 
     undoBtn?.addEventListener('click', handleUndo);
+    redoBtn?.addEventListener('click', handleRedo);
 
     return () => {
       window.removeEventListener('keyup', handleKeyUp);
       undoBtn?.removeEventListener('click', handleUndo);
+      redoBtn?.removeEventListener('click', handleRedo);
     };
-  }, [canvasRef, dragging, handleUndo, undoRef]);
+  }, [canvasRef, dragging, handleRedo, handleUndo, redoRef, undoRef]);
 
   useEffect(() => {
     if (ctx) socket.emit('joined_room');
@@ -108,7 +111,7 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 3. ctrl y
+// 3. redo button
 // 4. copy/paste (localstorage)
 // 5. Responsywnosc
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze
