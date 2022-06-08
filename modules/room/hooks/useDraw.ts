@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getPos } from '@/common/lib/getPos';
 import { socket } from '@/common/lib/socket';
 import { useOptionsValue } from '@/common/recoil/options';
+import { useSetSelection } from '@/common/recoil/options/options.hooks';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
 
 import { drawRect, drawCircle, drawLine } from '../helpers/Canvas.helpers';
@@ -19,6 +20,7 @@ export const useDraw = (blocked: boolean) => {
   const options = useOptionsValue();
   const boardPosition = useBoardPosition();
   const { clearSavedMoves } = useSetSavedMoves();
+  const { setSelection } = useSetSelection();
 
   const movedX = boardPosition.x;
   const movedY = boardPosition.y;
@@ -83,7 +85,8 @@ export const useDraw = (blocked: boolean) => {
     if (options.mode === 'select') {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
 
-      drawRect(ctx, tempMoves[0], finalX, finalY, shift, true);
+      drawRect(ctx, tempMoves[0], finalX, finalY, false, true);
+      tempMoves.push([finalX, finalY]);
 
       return;
     }
@@ -117,6 +120,16 @@ export const useDraw = (blocked: boolean) => {
 
     ctx.closePath();
 
+    if (options.mode === 'select') {
+      drawAndSet();
+      const x = tempMoves[0][0];
+      const y = tempMoves[0][1];
+      const width = tempMoves[tempMoves.length - 1][0] - x;
+      const height = tempMoves[tempMoves.length - 1][1] - y;
+
+      if (width !== 0 && height !== 0) setSelection({ x, y, width, height });
+    }
+
     const move: Move = {
       rect: {
         ...tempSize,
@@ -137,17 +150,12 @@ export const useDraw = (blocked: boolean) => {
     tempMoves = [];
     tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
     tempSize = { width: 0, height: 0 };
-
-    if (options.mode === 'select') {
-      drawAndSet();
-      tempImageData = undefined;
-
-      return;
-    }
     tempImageData = undefined;
 
-    socket.emit('draw', move);
-    clearSavedMoves();
+    if (options.mode !== 'select') {
+      socket.emit('draw', move);
+      clearSavedMoves();
+    }
   };
 
   return {

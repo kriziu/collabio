@@ -3,10 +3,7 @@ import { useEffect } from 'react';
 import { socket } from '@/common/lib/socket';
 import { useSetUsers } from '@/common/recoil/room';
 
-export const useSocketDraw = (
-  ctx: CanvasRenderingContext2D | undefined,
-  drawing: boolean
-) => {
+export const useSocketDraw = (drawing: boolean) => {
   const { handleAddMoveToUser, handleRemoveMoveFromUser } = useSetUsers();
 
   useEffect(() => {
@@ -14,7 +11,7 @@ export const useSocketDraw = (
     let userIdLater = '';
 
     socket.on('user_draw', (move, userId) => {
-      if (ctx && !drawing) {
+      if (!drawing) {
         handleAddMoveToUser(userId, move);
       } else {
         moveToDrawLater = move;
@@ -25,11 +22,11 @@ export const useSocketDraw = (
     return () => {
       socket.off('user_draw');
 
-      if (moveToDrawLater && userIdLater && ctx) {
+      if (moveToDrawLater && userIdLater) {
         handleAddMoveToUser(userIdLater, moveToDrawLater);
       }
     };
-  }, [ctx, drawing, handleAddMoveToUser]);
+  }, [drawing, handleAddMoveToUser]);
 
   useEffect(() => {
     socket.on('user_undo', (userId) => {

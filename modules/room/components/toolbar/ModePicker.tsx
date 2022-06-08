@@ -1,11 +1,20 @@
+import { useEffect } from 'react';
+
 import { AiOutlineSelect } from 'react-icons/ai';
 import { BsPencilFill } from 'react-icons/bs';
 import { FaEraser } from 'react-icons/fa';
 
-import { useOptions } from '@/common/recoil/options';
+import { useOptions, useSetSelection } from '@/common/recoil/options';
 
 const ModePicker = () => {
   const [options, setOptions] = useOptions();
+  const { clearSelection } = useSetSelection();
+
+  useEffect(() => {
+    clearSelection();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options.mode]);
 
   return (
     <>

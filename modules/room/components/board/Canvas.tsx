@@ -8,6 +8,7 @@ import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { socket } from '@/common/lib/socket';
 
 import { useBoardPosition } from '../../hooks/useBoardPosition';
+import { useCtx } from '../../hooks/useCtx';
 import { useDraw } from '../../hooks/useDraw';
 import { useMovesHandlers } from '../../hooks/useMovesHandlers';
 import { useRefs } from '../../hooks/useRefs';
@@ -20,14 +21,14 @@ const Canvas = () => {
   const { width, height } = useViewportSize();
   const { x, y } = useBoardPosition();
   const { handleUndo, handleRedo } = useMovesHandlers();
+  const ctx = useCtx();
 
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
   const [dragging, setDragging] = useState(false);
   const [, setMovedMinimap] = useState(false);
 
   const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } =
     useDraw(dragging);
-  useSocketDraw(ctx, drawing);
+  useSocketDraw(drawing);
 
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
@@ -37,9 +38,6 @@ const Canvas = () => {
 
   // SETUP
   useEffect(() => {
-    const newCtx = canvasRef.current?.getContext('2d');
-    if (newCtx) setCtx(newCtx);
-
     const handleKeyUp = (e: KeyboardEvent) => {
       if (!e.ctrlKey && dragging) {
         setDragging(false);
