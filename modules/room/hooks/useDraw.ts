@@ -75,12 +75,10 @@ export const useDraw = (blocked: boolean) => {
     const [finalX, finalY] = [getPos(x, movedX), getPos(y, movedY)];
 
     setupCtxOptions();
+    drawAndSet();
     switch (options.shape) {
       case 'line':
-        if (shift) {
-          tempMoves = tempMoves.slice(0, 1);
-          drawAndSet();
-        }
+        if (shift) tempMoves = tempMoves.slice(0, 1);
 
         drawLine(ctx, tempMoves[0], finalX, finalY, shift);
 
@@ -88,12 +86,10 @@ export const useDraw = (blocked: boolean) => {
         break;
 
       case 'circle':
-        drawAndSet();
         tempCircle = drawCircle(ctx, tempMoves[0], finalX, finalY, shift);
         break;
 
       case 'rect':
-        drawAndSet();
         tempSize = drawRect(ctx, tempMoves[0], finalX, finalY, shift);
         break;
 
