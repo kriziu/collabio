@@ -62,9 +62,11 @@ export const useDraw = (blocked: boolean) => {
     setDrawing(true);
     setupCtxOptions();
 
-    ctx.beginPath();
-    ctx.lineTo(finalX, finalY);
-    ctx.stroke();
+    if (options.shape === 'line') {
+      ctx.beginPath();
+      ctx.lineTo(finalX, finalY);
+      ctx.stroke();
+    }
 
     tempMoves.push([finalX, finalY]);
   };
