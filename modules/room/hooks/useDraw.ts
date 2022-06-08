@@ -83,9 +83,9 @@ export const useDraw = (blocked: boolean) => {
     drawAndSet();
 
     if (options.mode === 'select') {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
       drawRect(ctx, tempMoves[0], finalX, finalY, false, true);
+      ctx.fillStyle = 'rgba(0, 0, 0)';
       tempMoves.push([finalX, finalY]);
 
       return;
@@ -143,7 +143,6 @@ export const useDraw = (blocked: boolean) => {
       path: tempMoves,
       options,
       timestamp: 0,
-      eraser: options.mode === 'eraser',
       id: '',
     };
 
