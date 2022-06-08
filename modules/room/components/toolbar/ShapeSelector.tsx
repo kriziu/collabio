@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { BiRectangle } from 'react-icons/bi';
-import { BsPencilFill } from 'react-icons/bs';
+import { CgShapeZigzag } from 'react-icons/cg';
 import { FaCircle } from 'react-icons/fa';
 import { useClickAway } from 'react-use';
 
@@ -36,7 +36,7 @@ const ShapeSelector = () => {
       >
         {options.shape === 'circle' && <FaCircle />}
         {options.shape === 'rect' && <BiRectangle />}
-        {options.shape === 'line' && <BsPencilFill />}
+        {options.shape === 'line' && <CgShapeZigzag />}
       </button>
 
       <AnimatePresence>
@@ -52,7 +52,7 @@ const ShapeSelector = () => {
               className="btn-icon text-xl"
               onClick={() => handleShapeChange('line')}
             >
-              <BsPencilFill />
+              <CgShapeZigzag />
             </button>
 
             <button

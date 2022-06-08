@@ -111,7 +111,6 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 3. redo button
 // 4. copy/paste (localstorage)
 // 5. Responsywnosc
 // 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

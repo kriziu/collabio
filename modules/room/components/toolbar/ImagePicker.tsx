@@ -6,7 +6,7 @@ import { optimizeImage } from '@/common/lib/optimizeImage';
 
 import { useMoveImage } from '../../hooks/useMoveImage';
 
-const ImageChoser = () => {
+const ImagePicker = () => {
   const { setMoveImage } = useMoveImage();
 
   useEffect(() => {
@@ -51,4 +51,4 @@ const ImageChoser = () => {
   );
 };
 
-export default ImageChoser;
+export default ImagePicker;

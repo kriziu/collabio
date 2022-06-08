@@ -37,7 +37,8 @@ export const useDraw = (blocked: boolean) => {
       ctx.lineCap = 'round';
       ctx.lineWidth = options.lineWidth;
       ctx.strokeStyle = options.lineColor;
-      if (options.erase) ctx.globalCompositeOperation = 'destination-out';
+      if (options.mode === 'eraser')
+        ctx.globalCompositeOperation = 'destination-out';
       else ctx.globalCompositeOperation = 'source-over';
     }
   };
@@ -62,7 +63,7 @@ export const useDraw = (blocked: boolean) => {
     setDrawing(true);
     setupCtxOptions();
 
-    if (options.shape === 'line') {
+    if (options.shape === 'line' && options.mode !== 'select') {
       ctx.beginPath();
       ctx.lineTo(finalX, finalY);
       ctx.stroke();
@@ -78,6 +79,15 @@ export const useDraw = (blocked: boolean) => {
 
     setupCtxOptions();
     drawAndSet();
+
+    if (options.mode === 'select') {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+
+      drawRect(ctx, tempMoves[0], finalX, finalY, shift, true);
+
+      return;
+    }
+
     switch (options.shape) {
       case 'line':
         if (shift) tempMoves = tempMoves.slice(0, 1);
@@ -120,13 +130,20 @@ export const useDraw = (blocked: boolean) => {
       path: tempMoves,
       options,
       timestamp: 0,
-      eraser: options.erase,
+      eraser: options.mode === 'eraser',
       id: '',
     };
 
     tempMoves = [];
     tempCircle = { cX: 0, cY: 0, radiusX: 0, radiusY: 0 };
     tempSize = { width: 0, height: 0 };
+
+    if (options.mode === 'select') {
+      drawAndSet();
+      tempImageData = undefined;
+
+      return;
+    }
     tempImageData = undefined;
 
     socket.emit('draw', move);

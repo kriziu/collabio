@@ -1,14 +1,13 @@
-import { BsThreeDots } from 'react-icons/bs';
 import { HiOutlineDownload } from 'react-icons/hi';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 
 import { useRefs } from '../../hooks/useRefs';
 import ColorPicker from './ColorPicker';
-import Eraser from './Eraser';
 import HistoryBtns from './HistoryBtns';
-import ImageChoser from './ImageChoser';
+import ImagePicker from './ImagePicker';
 import LineWidthPicker from './LineWidthPicker';
+import ModePicker from './ModePicker';
 import ShapeSelector from './ShapeSelector';
 
 const ToolBar = () => {
@@ -43,14 +42,11 @@ const ToolBar = () => {
 
       <div className="h-px w-full bg-white" />
 
-      <ColorPicker />
       <ShapeSelector />
+      <ColorPicker />
       <LineWidthPicker />
-      <Eraser />
-      <ImageChoser />
-      <button className="btn-icon text-xl">
-        <BsThreeDots />
-      </button>
+      <ModePicker />
+      <ImagePicker />
       <button className="btn-icon text-xl" onClick={handleDownload}>
         <HiOutlineDownload />
       </button>

@@ -1,11 +1,12 @@
 export declare global {
   type Shape = 'line' | 'circle' | 'rect' | 'image';
+  type CtxMode = 'eraser' | 'draw' | 'select';
 
   interface CtxOptions {
     lineWidth: number;
     lineColor: string;
-    erase: boolean;
     shape: Shape;
+    mode: CtxMode;
   }
 
   interface Move {

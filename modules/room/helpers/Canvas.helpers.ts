@@ -52,13 +52,15 @@ export const drawRect = (
   from: [number, number],
   x: number,
   y: number,
-  shift?: boolean
+  shift?: boolean,
+  fill?: boolean
 ) => {
   ctx.beginPath();
 
   const { width, height } = getWidthAndHeight(x, y, from, shift);
 
-  ctx.rect(from[0], from[1], width, height);
+  if (fill) ctx.fillRect(from[0], from[1], width, height);
+  else ctx.rect(from[0], from[1], width, height);
 
   ctx.stroke();
   ctx.closePath();
