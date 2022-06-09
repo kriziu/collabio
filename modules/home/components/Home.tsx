@@ -18,6 +18,10 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
+    document.body.style.backgroundColor = 'white';
+  }, []);
+
+  useEffect(() => {
     socket.on('created', (roomIdFromServer) => {
       setAtomRoomId(roomIdFromServer);
       router.push(roomIdFromServer);

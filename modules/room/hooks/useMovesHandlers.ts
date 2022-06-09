@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 
 import { getStringFromRgba } from '@/common/lib/rgba';
 import { socket } from '@/common/lib/socket';
+import { useBackground } from '@/common/recoil/background';
 import { useMyMoves, useRoom } from '@/common/recoil/room';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
 
@@ -12,11 +13,12 @@ import { useSelection } from './useSelection';
 let prevMovesLength = 0;
 
 export const useMovesHandlers = (clearOnYourMove: () => void) => {
-  const { canvasRef, minimapRef } = useRefs();
+  const { canvasRef, minimapRef, bgRef } = useRefs();
   const room = useRoom();
   const { handleAddMyMove, handleRemoveMyMove } = useMyMoves();
   const { addSavedMove, removeSavedMove } = useSetSavedMoves();
   const ctx = useCtx();
+  const bg = useBackground();
 
   const sortedMoves = useMemo(() => {
     const { usersMoves, movesWithoutUser, myMoves } = room;
@@ -31,10 +33,17 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
   }, [room]);
 
   const copyCanvasToSmall = () => {
-    if (canvasRef.current && minimapRef.current) {
+    if (canvasRef.current && minimapRef.current && bgRef.current) {
       const smallCtx = minimapRef.current.getContext('2d');
       if (smallCtx) {
         smallCtx.clearRect(0, 0, smallCtx.canvas.width, smallCtx.canvas.height);
+        smallCtx.drawImage(
+          bgRef.current,
+          0,
+          0,
+          smallCtx.canvas.width,
+          smallCtx.canvas.height
+        );
         smallCtx.drawImage(
           canvasRef.current,
           0,
@@ -45,6 +54,9 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
       }
     }
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => copyCanvasToSmall(), [bg]);
 
   const drawMove = (move: Move, image?: HTMLImageElement) => {
     const { path } = move;

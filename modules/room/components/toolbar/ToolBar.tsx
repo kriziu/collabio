@@ -8,6 +8,7 @@ import { useModal } from '@/common/recoil/modal';
 
 import { useRefs } from '../../hooks/useRefs';
 import ShareModal from '../../modals/ShareModal';
+import BackgroundPicker from './BackgoundPicker';
 import ColorPicker from './ColorPicker';
 import HistoryBtns from './HistoryBtns';
 import ImagePicker from './ImagePicker';
@@ -41,9 +42,7 @@ const ToolBar = () => {
     link.click();
   };
 
-  const handleShare = () => {
-    openModal(<ShareModal />);
-  };
+  const handleShare = () => openModal(<ShareModal />);
 
   return (
     <div
@@ -64,6 +63,7 @@ const ToolBar = () => {
 
       <div className="h-px w-full bg-white" />
 
+      <BackgroundPicker />
       <button className="btn-icon text-2xl" onClick={handleShare}>
         <IoIosShareAlt />
       </button>
