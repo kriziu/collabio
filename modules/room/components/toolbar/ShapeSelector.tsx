@@ -31,7 +31,8 @@ const ShapeSelector = () => {
   return (
     <div className="relative flex items-center" ref={ref}>
       <button
-        className="btn-icon text-xl"
+        className="btn-icon text-2xl"
+        disabled={options.mode === 'select'}
         onClick={() => setOpened((prev) => !prev)}
       >
         {options.shape === 'circle' && <BsCircle />}
@@ -49,21 +50,21 @@ const ShapeSelector = () => {
             exit="from"
           >
             <button
-              className="btn-icon text-xl"
+              className="btn-icon text-2xl"
               onClick={() => handleShapeChange('line')}
             >
               <CgShapeZigzag />
             </button>
 
             <button
-              className="btn-icon text-xl"
+              className="btn-icon text-2xl"
               onClick={() => handleShapeChange('rect')}
             >
               <BiRectangle />
             </button>
 
             <button
-              className="btn-icon text-xl"
+              className="btn-icon text-2xl"
               onClick={() => handleShapeChange('circle')}
             >
               <BsCircle />

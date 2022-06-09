@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { HiOutlineDownload } from 'react-icons/hi';
 import { ImExit } from 'react-icons/im';
+import { IoIosShareAlt } from 'react-icons/io';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 
@@ -56,7 +57,10 @@ const ToolBar = () => {
 
       <div className="h-px w-full bg-white" />
 
-      <button className="btn-icon text-xl" onClick={handleDownload}>
+      <button className="btn-icon text-2xl" onClick={() => {}}>
+        <IoIosShareAlt />
+      </button>
+      <button className="btn-icon text-2xl" onClick={handleDownload}>
         <HiOutlineDownload />
       </button>
       <button className="btn-icon text-xl" onClick={handleExit}>

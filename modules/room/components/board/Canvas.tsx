@@ -115,6 +115,6 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 1. inne tła, figury z fillem (moze kolor do wyboru osobno obramowania i osobno fill)
+// 1. inne tła
 // 2. Responsywnosc
 // 3. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

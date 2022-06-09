@@ -20,7 +20,11 @@ const ColorPicker = () => {
 
   return (
     <div className="relative flex items-center" ref={ref}>
-      <button className="btn-icon" onClick={() => setOpened(!opened)}>
+      <button
+        className="btn-icon"
+        onClick={() => setOpened(!opened)}
+        disabled={options.mode !== 'draw'}
+      >
         <BsPaletteFill />
       </button>
       <AnimatePresence>
