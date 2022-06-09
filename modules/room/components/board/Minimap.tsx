@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
 
 import { motion, useMotionValue } from 'framer-motion';
 
@@ -24,26 +24,33 @@ const MiniMap = ({
   const miniX = useMotionValue(0);
   const miniY = useMotionValue(0);
 
+  const divider = useMemo(() => {
+    if (width > 1600) return 7;
+    if (width > 1000) return 10;
+    if (width > 600) return 14;
+    return 20;
+  }, [width]);
+
   useEffect(() => {
     miniX.onChange((newX) => {
-      if (!dragging) x.set(Math.floor(-newX * 7));
+      if (!dragging) x.set(Math.floor(-newX * divider));
     });
     miniY.onChange((newY) => {
-      if (!dragging) y.set(Math.floor(-newY * 7));
+      if (!dragging) y.set(Math.floor(-newY * divider));
     });
 
     return () => {
       miniX.clearListeners();
       miniY.clearListeners();
     };
-  }, [dragging, miniX, miniY, x, y]);
+  }, [divider, dragging, miniX, miniY, x, y]);
 
   return (
     <div
       className="absolute right-10 top-10 z-30 overflow-hidden rounded-lg shadow-lg"
       style={{
-        width: CANVAS_SIZE.width / 7,
-        height: CANVAS_SIZE.height / 7,
+        width: CANVAS_SIZE.width / divider,
+        height: CANVAS_SIZE.height / divider,
       }}
       ref={containerRef}
     >
@@ -62,12 +69,12 @@ const MiniMap = ({
         onDragEnd={() => setMovedMinimap((prev) => !prev)}
         className="absolute top-0 left-0 cursor-grab rounded-lg border-2 border-red-500"
         style={{
-          width: width / 7,
-          height: height / 7,
+          width: width / divider,
+          height: height / divider,
           x: miniX,
           y: miniY,
         }}
-        animate={{ x: -x.get() / 7, y: -y.get() / 7 }}
+        animate={{ x: -x.get() / divider, y: -y.get() / divider }}
         transition={{ duration: 0 }}
       />
     </div>

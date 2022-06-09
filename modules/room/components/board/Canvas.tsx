@@ -115,6 +115,4 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 1. gumka
-// 2. Responsywnosc
-// 3. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze
+// 1. Na telefonie przesuwanie, usunecie tego mouseposition
