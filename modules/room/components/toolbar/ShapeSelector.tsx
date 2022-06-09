@@ -2,8 +2,8 @@ import { useRef, useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { BiRectangle } from 'react-icons/bi';
+import { BsCircle } from 'react-icons/bs';
 import { CgShapeZigzag } from 'react-icons/cg';
-import { FaCircle } from 'react-icons/fa';
 import { useClickAway } from 'react-use';
 
 import { useOptions } from '@/common/recoil/options';
@@ -34,7 +34,7 @@ const ShapeSelector = () => {
         className="btn-icon text-xl"
         onClick={() => setOpened((prev) => !prev)}
       >
-        {options.shape === 'circle' && <FaCircle />}
+        {options.shape === 'circle' && <BsCircle />}
         {options.shape === 'rect' && <BiRectangle />}
         {options.shape === 'line' && <CgShapeZigzag />}
       </button>
@@ -66,7 +66,7 @@ const ShapeSelector = () => {
               className="btn-icon text-xl"
               onClick={() => handleShapeChange('circle')}
             >
-              <FaCircle />
+              <BsCircle />
             </button>
           </motion.div>
         )}

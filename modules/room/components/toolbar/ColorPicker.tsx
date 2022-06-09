@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { RgbaColorPicker } from 'react-colorful';
+import { BsPaletteFill } from 'react-icons/bs';
 import { useClickAway } from 'react-use';
 
-import { getStringFromRgba } from '@/common/lib/rgba';
 import { useOptions } from '@/common/recoil/options/options.hooks';
 
 import { EntryAnimation } from '../../animations/Entry.animations';
@@ -20,26 +20,36 @@ const ColorPicker = () => {
 
   return (
     <div className="relative flex items-center" ref={ref}>
-      <button
-        className="h-6 w-6 rounded-full border-2 border-white transition-all hover:scale-125 active:scale-100"
-        style={{ backgroundColor: getStringFromRgba(options.lineColor) }}
-        onClick={() => setOpened(!opened)}
-      />
+      <button className="btn-icon" onClick={() => setOpened(!opened)}>
+        <BsPaletteFill />
+      </button>
       <AnimatePresence>
         {opened && (
           <motion.div
-            className="absolute top-0 left-14"
+            className="absolute left-14 mt-24"
             variants={EntryAnimation}
             initial="from"
             animate="to"
             exit="from"
           >
+            <h2 className="font-semibold text-black">Line color</h2>
             <RgbaColorPicker
               color={options.lineColor}
               onChange={(e) => {
                 setOptions({
                   ...options,
                   lineColor: e,
+                });
+              }}
+              className="mb-5"
+            />
+            <h2 className="font-semibold text-black">Fill color</h2>
+            <RgbaColorPicker
+              color={options.fillColor}
+              onChange={(e) => {
+                setOptions({
+                  ...options,
+                  fillColor: e,
                 });
               }}
             />
