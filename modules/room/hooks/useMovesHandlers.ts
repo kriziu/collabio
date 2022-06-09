@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
+import { getStringFromRgba } from '@/common/lib/rgba';
 import { socket } from '@/common/lib/socket';
 import { useMyMoves, useRoom } from '@/common/recoil/room';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
@@ -10,7 +11,7 @@ import { useSelection } from './useSelection';
 
 let prevMovesLength = 0;
 
-export const useMovesHandlers = () => {
+export const useMovesHandlers = (clearOnYourMove: () => void) => {
   const { canvasRef, minimapRef } = useRefs();
   const room = useRoom();
   const { handleAddMyMove, handleRemoveMyMove } = useMyMoves();
@@ -56,7 +57,8 @@ export const useMovesHandlers = () => {
       ctx.drawImage(image, path[0][0], path[0][1]);
 
     ctx.lineWidth = moveOptions.lineWidth;
-    ctx.strokeStyle = moveOptions.lineColor;
+    ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor);
+    ctx.fillStyle = getStringFromRgba(moveOptions.fillColor);
     if (moveOptions.mode === 'eraser')
       ctx.globalCompositeOperation = 'destination-out';
     else ctx.globalCompositeOperation = 'source-over';
@@ -79,6 +81,7 @@ export const useMovesHandlers = () => {
         ctx.beginPath();
         ctx.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
         ctx.stroke();
+        ctx.fill();
         ctx.closePath();
         break;
       }
@@ -87,13 +90,11 @@ export const useMovesHandlers = () => {
         const { width, height } = move.rect;
 
         ctx.beginPath();
-        if (move.rect.fill) {
-          ctx.fillRect(path[0][0], path[0][1], width, height);
-          ctx.fill();
-        } else {
-          ctx.rect(path[0][0], path[0][1], width, height);
-          ctx.stroke();
-        }
+
+        ctx.rect(path[0][0], path[0][1], width, height);
+        ctx.stroke();
+        ctx.fill();
+
         ctx.closePath();
         break;
       }
@@ -136,12 +137,15 @@ export const useMovesHandlers = () => {
   useSelection(drawAllMoves);
 
   useEffect(() => {
-    socket.on('your_move', (move) => handleAddMyMove(move));
+    socket.on('your_move', (move) => {
+      clearOnYourMove();
+      handleAddMyMove(move);
+    });
 
     return () => {
       socket.off('your_move');
     };
-  }, [handleAddMyMove]);
+  }, [clearOnYourMove, handleAddMyMove]);
 
   useEffect(() => {
     if (prevMovesLength >= sortedMoves.length || !prevMovesLength) {

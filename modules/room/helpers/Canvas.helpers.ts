@@ -42,6 +42,7 @@ export const drawCircle = (
   ctx.ellipse(cX, cY, radiusX, radiusY, 0, 0, 2 * Math.PI);
 
   ctx.stroke();
+  ctx.fill();
   ctx.closePath();
 
   return { cX, cY, radiusX, radiusY };
@@ -63,6 +64,7 @@ export const drawRect = (
   else ctx.rect(from[0], from[1], width, height);
 
   ctx.stroke();
+  ctx.fill();
   ctx.closePath();
 
   return { width, height };

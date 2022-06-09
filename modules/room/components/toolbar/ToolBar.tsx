@@ -1,4 +1,6 @@
+import { useRouter } from 'next/router';
 import { HiOutlineDownload } from 'react-icons/hi';
+import { ImExit } from 'react-icons/im';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 
@@ -12,6 +14,10 @@ import ShapeSelector from './ShapeSelector';
 
 const ToolBar = () => {
   const { canvasRef, bgRef } = useRefs();
+
+  const router = useRouter();
+
+  const handleExit = () => router.push('/');
 
   const handleDownload = () => {
     const canvas = document.createElement('canvas');
@@ -47,8 +53,14 @@ const ToolBar = () => {
       <LineWidthPicker />
       <ModePicker />
       <ImagePicker />
+
+      <div className="h-px w-full bg-white" />
+
       <button className="btn-icon text-xl" onClick={handleDownload}>
         <HiOutlineDownload />
+      </button>
+      <button className="btn-icon text-xl" onClick={handleExit}>
+        <ImExit />
       </button>
     </div>
   );

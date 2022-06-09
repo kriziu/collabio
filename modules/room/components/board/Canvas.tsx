@@ -20,15 +20,21 @@ const Canvas = () => {
   const { canvasRef, bgRef, undoRef, redoRef } = useRefs();
   const { width, height } = useViewportSize();
   const { x, y } = useBoardPosition();
-  const { handleUndo, handleRedo } = useMovesHandlers();
   const ctx = useCtx();
 
   const [dragging, setDragging] = useState(false);
   const [, setMovedMinimap] = useState(false);
 
-  const { handleEndDrawing, handleDraw, handleStartDrawing, drawing } =
-    useDraw(dragging);
+  const {
+    handleEndDrawing,
+    handleDraw,
+    handleStartDrawing,
+    drawing,
+    clearOnYourMove,
+  } = useDraw(dragging);
   useSocketDraw(drawing);
+
+  const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
 
   useKeyPressEvent('Control', (e) => {
     if (e.ctrlKey && !dragging) {
@@ -109,6 +115,6 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 4. copy/paste (localstorage)
-// 5. Responsywnosc
-// 6. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze
+// 1. inne tła, figury z fillem (moze kolor do wyboru osobno obramowania i osobno fill)
+// 2. Responsywnosc
+// 3. Na telefonie przesuwanie, minimapka na klikciecie, toolbar na klikciecie, osoby co sa to na gorze

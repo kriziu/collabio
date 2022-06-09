@@ -1,5 +1,6 @@
 import { motion, useMotionValue } from 'framer-motion';
 
+import { DEFAULT_MOVE } from '@/common/constants/defaultMove';
 import { getPos } from '@/common/lib/getPos';
 import { socket } from '@/common/lib/socket';
 
@@ -19,22 +20,14 @@ const MoveImage = () => {
     const [finalX, finalY] = [getPos(imageX.get(), x), getPos(imageY.get(), y)];
 
     const move: Move = {
-      rect: {
-        width: 0,
-        height: 0,
-      },
-      circle: { cX: 0, cY: 0, radiusX: 0, radiusY: 0 },
+      ...DEFAULT_MOVE,
       img: { base64: moveImage },
       path: [[finalX, finalY]],
       options: {
-        lineWidth: 1,
-        lineColor: '#000',
-        mode: 'draw',
+        ...DEFAULT_MOVE.options,
         selection: null,
         shape: 'image',
       },
-      timestamp: 0,
-      id: '',
     };
 
     socket.emit('draw', move);
