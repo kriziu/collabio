@@ -115,4 +115,5 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 1. Na telefonie przesuwanie, usunecie tego mouseposition
+// 0. wycinane elementu na selectie poprawione, przesuwanie selecta
+// 1. Na telefonie przesuwanie, modale

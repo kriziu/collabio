@@ -1,4 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useMemo, useRef } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { motion, useMotionValue } from 'framer-motion';
 
@@ -16,8 +23,21 @@ const MiniMap = ({
   setMovedMinimap: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { minimapRef } = useRefs();
-  const { x, y } = useBoardPosition();
+  const boardPos = useBoardPosition();
   const { width, height } = useViewportSize();
+
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = boardPos.x.onChange(setX);
+    return unsubscribe;
+  }, [boardPos.x]);
+
+  useEffect(() => {
+    const unsubscribe = boardPos.y.onChange(setY);
+    return unsubscribe;
+  }, [boardPos.y]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,17 +53,17 @@ const MiniMap = ({
 
   useEffect(() => {
     miniX.onChange((newX) => {
-      if (!dragging) x.set(Math.floor(-newX * divider));
+      if (!dragging) boardPos.x.set(Math.floor(-newX * divider));
     });
     miniY.onChange((newY) => {
-      if (!dragging) y.set(Math.floor(-newY * divider));
+      if (!dragging) boardPos.y.set(Math.floor(-newY * divider));
     });
 
     return () => {
       miniX.clearListeners();
       miniY.clearListeners();
     };
-  }, [divider, dragging, miniX, miniY, x, y]);
+  }, [boardPos.x, boardPos.y, divider, dragging, miniX, miniY]);
 
   return (
     <div
@@ -74,7 +94,7 @@ const MiniMap = ({
           x: miniX,
           y: miniY,
         }}
-        animate={{ x: -x.get() / divider, y: -y.get() / divider }}
+        animate={{ x: -x / divider, y: -y / divider }}
         transition={{ duration: 0 }}
       />
     </div>
