@@ -4,8 +4,10 @@ import { ImExit } from 'react-icons/im';
 import { IoIosShareAlt } from 'react-icons/io';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
+import { useModal } from '@/common/recoil/modal';
 
 import { useRefs } from '../../hooks/useRefs';
+import ShareModal from '../../modals/ShareModal';
 import ColorPicker from './ColorPicker';
 import HistoryBtns from './HistoryBtns';
 import ImagePicker from './ImagePicker';
@@ -15,6 +17,7 @@ import ShapeSelector from './ShapeSelector';
 
 const ToolBar = () => {
   const { canvasRef, bgRef } = useRefs();
+  const { openModal } = useModal();
 
   const router = useRouter();
 
@@ -38,6 +41,10 @@ const ToolBar = () => {
     link.click();
   };
 
+  const handleShare = () => {
+    openModal(<ShareModal />);
+  };
+
   return (
     <div
       className="absolute left-10 top-[50%] z-50 flex flex-col items-center gap-5 rounded-lg bg-zinc-900 p-5 text-white"
@@ -57,7 +64,7 @@ const ToolBar = () => {
 
       <div className="h-px w-full bg-white" />
 
-      <button className="btn-icon text-2xl" onClick={() => {}}>
+      <button className="btn-icon text-2xl" onClick={handleShare}>
         <IoIosShareAlt />
       </button>
       <button className="btn-icon text-2xl" onClick={handleDownload}>

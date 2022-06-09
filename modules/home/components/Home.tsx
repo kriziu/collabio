@@ -67,7 +67,7 @@ const Home = () => {
           Enter your name
         </label>
         <input
-          className="rounded-xl border p-5 py-1"
+          className="input"
           id="room-id"
           placeholder="Username..."
           value={username}
@@ -85,7 +85,7 @@ const Home = () => {
           Enter room id
         </label>
         <input
-          className="rounded-xl border p-5 py-1"
+          className="input"
           id="room-id"
           placeholder="Room id..."
           value={roomId}

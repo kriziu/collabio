@@ -15,6 +15,10 @@
     @apply rounded-xl bg-black p-5 py-1 text-white transition-all hover:scale-105 active:scale-100;
   }
 
+  .input {
+    @apply rounded-xl border p-5 py-1;
+  }
+
   .overflow-overlay {
     overflow-y: scroll;
     overflow-y: overlay;
@@ -34,6 +38,7 @@ html {
 
 #__next,
 #portal {
+  z-index: 0;
   position: absolute;
   top: 0;
   bottom: 0;
