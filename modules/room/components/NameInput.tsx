@@ -3,10 +3,13 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { socket } from '@/common/lib/socket';
+import { useModal } from '@/common/recoil/modal';
 import { useSetRoomId } from '@/common/recoil/room';
+import NotFoundModal from '@/modules/home/modals/NotFound';
 
 const NameInput = () => {
   const setRoomId = useSetRoomId();
+  const { openModal } = useModal();
 
   const [name, setName] = useState('');
 
@@ -32,8 +35,10 @@ const NameInput = () => {
 
   useEffect(() => {
     const handleJoined = (roomIdFromServer: string, failed?: boolean) => {
-      if (failed) router.push('/');
-      else setRoomId(roomIdFromServer);
+      if (failed) {
+        router.push('/');
+        openModal(<NotFoundModal id={roomIdFromServer} />);
+      } else setRoomId(roomIdFromServer);
     };
 
     socket.on('joined', handleJoined);
@@ -41,7 +46,7 @@ const NameInput = () => {
     return () => {
       socket.off('joined', handleJoined);
     };
-  }, [router, setRoomId]);
+  }, [openModal, router, setRoomId]);
 
   const handleJoinRoom = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

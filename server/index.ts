@@ -86,7 +86,7 @@ nextApp.prepare().then(async () => {
     socket.on('join_room', (roomId, username) => {
       const room = rooms.get(roomId);
 
-      if (room) {
+      if (room && room.users.size < 12) {
         socket.join(roomId);
 
         room.users.set(socket.id, username);
