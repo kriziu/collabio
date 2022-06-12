@@ -21,7 +21,7 @@ const Canvas = () => {
   const { x, y } = useBoardPosition();
   const ctx = useCtx();
 
-  const [dragging, setDragging] = useState(false);
+  const [dragging, setDragging] = useState(true);
 
   const {
     handleEndDrawing,
@@ -33,6 +33,10 @@ const Canvas = () => {
   useSocketDraw(drawing);
 
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
+
+  useEffect(() => {
+    setDragging(false);
+  }, []);
 
   // SETUP
   useEffect(() => {
@@ -113,5 +117,5 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// !!! Problem z przesuwaniem boardu
+// !!! Select renderuje sie pod obrazkami w niektorych przypadkach
 // 1. Na telefonie przesuwanie, modale

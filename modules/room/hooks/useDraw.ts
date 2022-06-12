@@ -123,6 +123,7 @@ export const useDraw = (blocked: boolean) => {
 
     ctx.closePath();
 
+    let addMove = true;
     if (options.mode === 'select' && tempMoves.length) {
       clearOnYourMove();
       let x = tempMoves[0][0];
@@ -147,7 +148,10 @@ export const useDraw = (blocked: boolean) => {
 
       if ((width < 4 || width > 4) && (height < 4 || height > 4))
         setSelection({ x, y, width, height });
-      else clearSelection();
+      else {
+        clearSelection();
+        addMove = false;
+      }
     }
 
     const move: Move = {
@@ -169,7 +173,7 @@ export const useDraw = (blocked: boolean) => {
     if (options.mode !== 'select') {
       socket.emit('draw', move);
       clearSavedMoves();
-    } else handleAddMyMove(move);
+    } else if (addMove) handleAddMyMove(move);
   };
 
   return {
