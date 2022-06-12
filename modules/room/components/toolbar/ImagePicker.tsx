@@ -17,7 +17,8 @@ const ImagePicker = () => {
         for (const item of items) {
           if (item.type.includes('image')) {
             const file = item.getAsFile();
-            if (file) optimizeImage(file, (uri) => setMoveImage(uri));
+            if (file)
+              optimizeImage(file, (uri) => setMoveImage({ base64: uri }));
           }
         }
       }
@@ -39,7 +40,7 @@ const ImagePicker = () => {
     fileInput.addEventListener('change', () => {
       if (fileInput && fileInput.files) {
         const file = fileInput.files[0];
-        optimizeImage(file, (uri) => setMoveImage(uri));
+        optimizeImage(file, (uri) => setMoveImage({ base64: uri }));
       }
     });
   };

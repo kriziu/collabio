@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
-import { useKeyPressEvent } from 'react-use';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useViewportSize } from '@/common/hooks/useViewportSize';
@@ -23,7 +22,6 @@ const Canvas = () => {
   const ctx = useCtx();
 
   const [dragging, setDragging] = useState(false);
-  const [, setMovedMinimap] = useState(false);
 
   const {
     handleEndDrawing,
@@ -36,12 +34,6 @@ const Canvas = () => {
 
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
 
-  useKeyPressEvent('Control', (e) => {
-    if (e.ctrlKey && !dragging) {
-      setDragging(true);
-    }
-  });
-
   // SETUP
   useEffect(() => {
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -50,7 +42,12 @@ const Canvas = () => {
       }
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      setDragging(e.ctrlKey);
+    };
+
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
 
     const undoBtn = undoRef.current;
     const redoBtn = redoRef.current;
@@ -60,6 +57,7 @@ const Canvas = () => {
 
     return () => {
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
       undoBtn?.removeEventListener('click', handleUndo);
       redoBtn?.removeEventListener('click', handleRedo);
     };
@@ -107,7 +105,7 @@ const Canvas = () => {
       />
       <Background bgRef={bgRef} />
 
-      <MiniMap dragging={dragging} setMovedMinimap={setMovedMinimap} />
+      <MiniMap dragging={dragging} />
     </div>
   );
 };
@@ -115,5 +113,5 @@ const Canvas = () => {
 export default Canvas;
 
 // TODO:
-// 0. wycinane elementu na selectie poprawione, przesuwanie selecta
+// !!! Problem z przesuwaniem boardu
 // 1. Na telefonie przesuwanie, modale

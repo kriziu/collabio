@@ -6,6 +6,7 @@ import { getStringFromRgba } from '@/common/lib/rgba';
 import { socket } from '@/common/lib/socket';
 import { useOptionsValue } from '@/common/recoil/options';
 import { useSetSelection } from '@/common/recoil/options/options.hooks';
+import { useMyMoves } from '@/common/recoil/room';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
 
 import { drawRect, drawCircle, drawLine } from '../helpers/Canvas.helpers';
@@ -21,7 +22,8 @@ export const useDraw = (blocked: boolean) => {
   const options = useOptionsValue();
   const boardPosition = useBoardPosition();
   const { clearSavedMoves } = useSetSavedMoves();
-  const { setSelection } = useSetSelection();
+  const { handleAddMyMove } = useMyMoves();
+  const { setSelection, clearSelection } = useSetSelection();
 
   const movedX = boardPosition.x;
   const movedY = boardPosition.y;
@@ -123,12 +125,29 @@ export const useDraw = (blocked: boolean) => {
 
     if (options.mode === 'select' && tempMoves.length) {
       clearOnYourMove();
-      const x = tempMoves[0][0];
-      const y = tempMoves[0][1];
-      const width = tempMoves[tempMoves.length - 1][0] - x;
-      const height = tempMoves[tempMoves.length - 1][1] - y;
+      let x = tempMoves[0][0];
+      let y = tempMoves[0][1];
+      let width = tempMoves[tempMoves.length - 1][0] - x;
+      let height = tempMoves[tempMoves.length - 1][1] - y;
 
-      if (width !== 0 && height !== 0) setSelection({ x, y, width, height });
+      if (width < 0) {
+        width -= 4;
+        x += 2;
+      } else {
+        width += 4;
+        x -= 2;
+      }
+      if (height < 0) {
+        height -= 4;
+        y += 2;
+      } else {
+        height += 4;
+        y -= 2;
+      }
+
+      if ((width < 4 || width > 4) && (height < 4 || height > 4))
+        setSelection({ x, y, width, height });
+      else clearSelection();
     }
 
     const move: Move = {
@@ -150,7 +169,7 @@ export const useDraw = (blocked: boolean) => {
     if (options.mode !== 'select') {
       socket.emit('draw', move);
       clearSavedMoves();
-    }
+    } else handleAddMyMove(move);
   };
 
   return {

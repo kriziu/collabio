@@ -3,6 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { getStringFromRgba } from '@/common/lib/rgba';
 import { socket } from '@/common/lib/socket';
 import { useBackground } from '@/common/recoil/background';
+import { useSetSelection } from '@/common/recoil/options';
 import { useMyMoves, useRoom } from '@/common/recoil/room';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
 
@@ -19,6 +20,7 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
   const { addSavedMove, removeSavedMove } = useSetSavedMoves();
   const ctx = useCtx();
   const bg = useBackground();
+  const { clearSelection } = useSetSelection();
 
   const sortedMoves = useMemo(() => {
     const { usersMoves, movesWithoutUser, myMoves } = room;
@@ -65,8 +67,7 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
 
     const moveOptions = move.options;
 
-    if (moveOptions.shape === 'image' && image)
-      ctx.drawImage(image, path[0][0], path[0][1]);
+    if (moveOptions.mode === 'select') return;
 
     ctx.lineWidth = moveOptions.lineWidth;
     ctx.strokeStyle = getStringFromRgba(moveOptions.lineColor);
@@ -74,6 +75,9 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
     if (moveOptions.mode === 'eraser')
       ctx.globalCompositeOperation = 'destination-out';
     else ctx.globalCompositeOperation = 'source-over';
+
+    if (moveOptions.shape === 'image' && image)
+      ctx.drawImage(image, path[0][0], path[0][1]);
 
     switch (moveOptions.shape) {
       case 'line': {
@@ -152,12 +156,13 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
     socket.on('your_move', (move) => {
       clearOnYourMove();
       handleAddMyMove(move);
+      setTimeout(clearSelection, 100);
     });
 
     return () => {
       socket.off('your_move');
     };
-  }, [clearOnYourMove, handleAddMyMove]);
+  }, [clearOnYourMove, clearSelection, handleAddMyMove]);
 
   useEffect(() => {
     if (prevMovesLength >= sortedMoves.length || !prevMovesLength) {
@@ -183,7 +188,9 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
   const handleUndo = () => {
     if (ctx) {
       const move = handleRemoveMyMove();
-      if (move) {
+
+      if (move?.options.mode === 'select') clearSelection();
+      else if (move) {
         addSavedMove(move);
         socket.emit('undo');
       }
@@ -194,6 +201,7 @@ export const useMovesHandlers = (clearOnYourMove: () => void) => {
   const handleRedo = () => {
     if (ctx) {
       const move = removeSavedMove();
+
       if (move) {
         socket.emit('draw', move);
       }

@@ -6,6 +6,8 @@ export const useSetSavedMoves = () => {
   const setSavedMoves = useSetRecoilState(savedMovesAtom);
 
   const addSavedMove = (move: Move) => {
+    if (move.options.mode === 'select') return;
+
     setSavedMoves((prevMoves) => [move, ...prevMoves]);
   };
 

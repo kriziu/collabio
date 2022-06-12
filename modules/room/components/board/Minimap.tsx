@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { motion, useMotionValue } from 'framer-motion';
 
@@ -15,13 +8,7 @@ import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 import { useRefs } from '../../hooks/useRefs';
 
-const MiniMap = ({
-  dragging,
-  setMovedMinimap,
-}: {
-  dragging: boolean;
-  setMovedMinimap: Dispatch<SetStateAction<boolean>>;
-}) => {
+const MiniMap = ({ dragging }: { dragging: boolean }) => {
   const { minimapRef } = useRefs();
   const boardPos = useBoardPosition();
   const { width, height } = useViewportSize();
@@ -29,15 +16,25 @@ const MiniMap = ({
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
 
-  useEffect(() => {
-    const unsubscribe = boardPos.x.onChange(setX);
-    return unsubscribe;
-  }, [boardPos.x]);
+  const [draggingMinimap, setDraggingMinimap] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = boardPos.y.onChange(setY);
-    return unsubscribe;
-  }, [boardPos.y]);
+    if (!draggingMinimap) {
+      const unsubscribe = boardPos.x.onChange(setX);
+      return unsubscribe;
+    }
+
+    return () => {};
+  }, [boardPos.x, draggingMinimap]);
+
+  useEffect(() => {
+    if (!draggingMinimap) {
+      const unsubscribe = boardPos.y.onChange(setY);
+      return unsubscribe;
+    }
+
+    return () => {};
+  }, [boardPos.y, draggingMinimap]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -85,8 +82,8 @@ const MiniMap = ({
         dragConstraints={containerRef}
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
-        onDragStart={() => setMovedMinimap((prev) => !prev)}
-        onDragEnd={() => setMovedMinimap((prev) => !prev)}
+        onDragStart={() => setDraggingMinimap(true)}
+        onDragEnd={() => setDraggingMinimap(false)}
         className="absolute top-0 left-0 cursor-grab rounded-lg border-2 border-red-500"
         style={{
           width: width / divider,

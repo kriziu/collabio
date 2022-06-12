@@ -10,7 +10,12 @@ export declare global {
     fillColor: RgbaColor;
     shape: Shape;
     mode: CtxMode;
-    selection: { x: number; y: number; width: number; height: number } | null;
+    selection: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    } | null;
   }
 
   interface Move {

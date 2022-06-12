@@ -1,7 +1,9 @@
 import {
   createContext,
+  Dispatch,
   ReactChild,
   RefObject,
+  SetStateAction,
   useEffect,
   useRef,
   useState,
@@ -22,9 +24,16 @@ export const roomContext = createContext<{
   redoRef: RefObject<HTMLButtonElement>;
   canvasRef: RefObject<HTMLCanvasElement>;
   bgRef: RefObject<HTMLCanvasElement>;
+  selectionRefs: RefObject<HTMLButtonElement[]>;
   minimapRef: RefObject<HTMLCanvasElement>;
-  moveImage: string;
-  setMoveImage: (base64: string) => void;
+  moveImage: { base64: string; x?: number; y?: number };
+  setMoveImage: Dispatch<
+    SetStateAction<{
+      base64: string;
+      x?: number | undefined;
+      y?: number | undefined;
+    }>
+  >;
 }>(null!);
 
 const RoomContextProvider = ({ children }: { children: ReactChild }) => {
@@ -37,8 +46,13 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const bgRef = useRef<HTMLCanvasElement>(null);
   const minimapRef = useRef<HTMLCanvasElement>(null);
+  const selectionRefs = useRef<HTMLButtonElement[]>([]);
 
-  const [moveImage, setMoveImage] = useState('');
+  const [moveImage, setMoveImage] = useState<{
+    base64: string;
+    x?: number;
+    y?: number;
+  }>({ base64: '' });
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -108,6 +122,7 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
         setMoveImage,
         moveImage,
         minimapRef,
+        selectionRefs,
       }}
     >
       {children}

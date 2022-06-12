@@ -29,15 +29,11 @@ export const useSetSelection = () => {
     width: number;
     height: number;
   }) => {
-    setOptions((prev) => {
-      return { ...prev, selection: rect };
-    });
+    setOptions((prev) => ({ ...prev, selection: rect }));
   };
 
   const clearSelection = () => {
-    setOptions((prev) => {
-      return { ...prev, selection: null };
-    });
+    setOptions((prev) => ({ ...prev, selection: null }));
   };
 
   return { setSelection, clearSelection };
