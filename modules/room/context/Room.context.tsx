@@ -54,6 +54,11 @@ const RoomContextProvider = ({ children }: { children: ReactChild }) => {
     y?: number;
   }>({ base64: '' });
 
+  useEffect(() => {
+    if (moveImage.base64 && !moveImage.x && !moveImage.y)
+      setMoveImage({ base64: moveImage.base64, x: 50, y: 50 });
+  }, [moveImage]);
+
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 

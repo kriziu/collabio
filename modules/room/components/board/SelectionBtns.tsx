@@ -1,25 +1,39 @@
+import { useEffect, useState } from 'react';
+
 import { AiOutlineDelete } from 'react-icons/ai';
 import { BsArrowsMove } from 'react-icons/bs';
 import { FiCopy } from 'react-icons/fi';
 
 import { useOptionsValue } from '@/common/recoil/options';
 
+import { useBoardPosition } from '../../hooks/useBoardPosition';
 import { useRefs } from '../../hooks/useRefs';
 
 const SelectionBtns = () => {
   const { selection } = useOptionsValue();
   const { selectionRefs } = useRefs();
+  const boardPos = useBoardPosition();
 
-  let top;
-  let left;
+  const [boardX, setX] = useState(0);
+  const [boardY, setY] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = boardPos.x.onChange(setX);
+    return unsubscribe;
+  }, [boardPos.x]);
+
+  useEffect(() => {
+    const unsubscribe = boardPos.y.onChange(setY);
+    return unsubscribe;
+  }, [boardPos.y]);
+
+  let top = -40;
+  let left = -40;
 
   if (selection) {
     const { x, y, width, height } = selection;
-    top = Math.min(y, y + height) - 40;
-    left = Math.min(x, x + width);
-  } else {
-    left = -40;
-    top = -40;
+    top = Math.min(y, y + height) - 40 + boardY;
+    left = Math.min(x, x + width) + boardX;
   }
 
   return (

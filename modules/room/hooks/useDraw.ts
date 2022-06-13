@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { DEFAULT_MOVE } from '@/common/constants/defaultMove';
+import { useViewportSize } from '@/common/hooks/useViewportSize';
 import { getPos } from '@/common/lib/getPos';
 import { getStringFromRgba } from '@/common/lib/rgba';
 import { socket } from '@/common/lib/socket';
@@ -24,6 +25,7 @@ export const useDraw = (blocked: boolean) => {
   const { clearSavedMoves } = useSetSavedMoves();
   const { handleAddMyMove } = useMyMoves();
   const { setSelection, clearSelection } = useSetSelection();
+  const vw = useViewportSize();
 
   const movedX = boardPosition.x;
   const movedY = boardPosition.y;
@@ -45,13 +47,14 @@ export const useDraw = (blocked: boolean) => {
   const drawAndSet = () => {
     if (!tempImageData)
       tempImageData = ctx?.getImageData(
-        0,
-        0,
-        ctx.canvas.width,
-        ctx.canvas.height
+        movedX.get() * -1,
+        movedY.get() * -1,
+        vw.width,
+        vw.height
       );
 
-    if (tempImageData) ctx?.putImageData(tempImageData, 0, 0);
+    if (tempImageData)
+      ctx?.putImageData(tempImageData, movedX.get() * -1, movedY.get() * -1);
   };
 
   const handleStartDrawing = (x: number, y: number) => {

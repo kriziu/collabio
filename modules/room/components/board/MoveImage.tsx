@@ -9,10 +9,8 @@ import { socket } from '@/common/lib/socket';
 
 import { useBoardPosition } from '../../hooks/useBoardPosition';
 import { useMoveImage } from '../../hooks/useMoveImage';
-import { useRefs } from '../../hooks/useRefs';
 
 const MoveImage = () => {
-  const { canvasRef } = useRefs();
   const { x, y } = useBoardPosition();
   const { moveImage, setMoveImage } = useMoveImage();
 
@@ -52,7 +50,6 @@ const MoveImage = () => {
   return (
     <motion.div
       drag
-      dragConstraints={canvasRef}
       dragElastic={0}
       dragTransition={{ power: 0.03, timeConstant: 50 }}
       className="absolute top-0 z-20 cursor-grab"

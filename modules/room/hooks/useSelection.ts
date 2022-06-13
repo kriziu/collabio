@@ -26,9 +26,9 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
 
   useEffect(() => {
     const callback = async () => {
-      if (ctx && selection) {
-        await drawAllMoves();
+      await drawAllMoves();
 
+      if (ctx && selection) {
         setTimeout(() => {
           const { x, y, width, height } = selection;
 
