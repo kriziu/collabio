@@ -26,22 +26,24 @@ export const useSelection = (drawAllMoves: () => Promise<void>) => {
 
   useEffect(() => {
     const callback = async () => {
-      await drawAllMoves();
-
       if (ctx && selection) {
-        const { x, y, width, height } = selection;
+        await drawAllMoves();
 
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = '#000';
-        ctx.setLineDash([5, 10]);
-        ctx.globalCompositeOperation = 'source-over';
+        setTimeout(() => {
+          const { x, y, width, height } = selection;
 
-        ctx.beginPath();
-        ctx.rect(x, y, width, height);
-        ctx.stroke();
-        ctx.closePath();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#000';
+          ctx.setLineDash([5, 10]);
+          ctx.globalCompositeOperation = 'source-over';
 
-        ctx.setLineDash([]);
+          ctx.beginPath();
+          ctx.rect(x, y, width, height);
+          ctx.stroke();
+          ctx.closePath();
+
+          ctx.setLineDash([]);
+        }, 10);
       }
     };
 

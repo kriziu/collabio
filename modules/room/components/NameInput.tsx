@@ -73,7 +73,7 @@ const NameInput = () => {
           id="room-id"
           placeholder="Username..."
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(e.target.value.slice(0, 15))}
         />
       </div>
 

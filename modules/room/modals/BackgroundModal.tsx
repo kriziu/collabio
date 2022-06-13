@@ -48,7 +48,7 @@ const BackgroundModal = () => {
         <AiOutlineClose />
       </button>
       <h2 className="mb-4 text-2xl font-bold">Choose background</h2>
-      <div className="grid grid-cols-2 grid-rows-2 gap-5">
+      <div className="grid gap-5 sm:grid-cols-2">
         <canvas
           className="h-48 w-64 cursor-pointer rounded-md border-2"
           tabIndex={0}

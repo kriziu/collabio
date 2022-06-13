@@ -25,7 +25,7 @@ const ShareModal = () => {
         Room id: <p className="inline font-bold">{id}</p>
       </h3>
       <div className="relative mt-2">
-        <input type="text" value={url} readOnly className="input w-96" />
+        <input type="text" value={url} readOnly className="input sm:w-96" />
         <button className="btn absolute right-0 h-full" onClick={handleCopy}>
           Copy
         </button>

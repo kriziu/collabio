@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { motion } from 'framer-motion';
+import { BsArrowsMove } from 'react-icons/bs';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
 import { useViewportSize } from '@/common/hooks/useViewportSize';
@@ -40,18 +41,12 @@ const Canvas = () => {
 
   // SETUP
   useEffect(() => {
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (!e.ctrlKey && dragging) {
-        setDragging(false);
-      }
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKey = (e: KeyboardEvent) => {
       setDragging(e.ctrlKey);
     };
 
-    window.addEventListener('keyup', handleKeyUp);
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKey);
+    window.addEventListener('keydown', handleKey);
 
     const undoBtn = undoRef.current;
     const redoBtn = redoRef.current;
@@ -60,8 +55,8 @@ const Canvas = () => {
     redoBtn?.addEventListener('click', handleRedo);
 
     return () => {
-      window.removeEventListener('keyup', handleKeyUp);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKey);
+      window.removeEventListener('keydown', handleKey);
       undoBtn?.removeEventListener('click', handleUndo);
       redoBtn?.removeEventListener('click', handleRedo);
     };
@@ -110,12 +105,17 @@ const Canvas = () => {
       <Background bgRef={bgRef} />
 
       <MiniMap dragging={dragging} />
+
+      <button
+        className={`absolute bottom-14 right-5 z-10 rounded-xl md:bottom-5 ${
+          dragging ? 'bg-green-500' : 'bg-zinc-300 text-black'
+        } p-3 text-lg text-white`}
+        onClick={() => setDragging((prev) => !prev)}
+      >
+        <BsArrowsMove />
+      </button>
     </div>
   );
 };
 
 export default Canvas;
-
-// TODO:
-// !!! Select renderuje sie pod obrazkami w niektorych przypadkach
-// 1. Na telefonie przesuwanie, modale
