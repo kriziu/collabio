@@ -1,6 +1,6 @@
 # Collabio | Online whiteboard
 
-Real-time white board made with Next.JS and Socket.IO
+Real-time whiteboard made with Next.JS and Socket.IO
 ## Features
 
 - Drawing lines, circles and rectangles
