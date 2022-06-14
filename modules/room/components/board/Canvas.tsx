@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 import { BsArrowsMove } from 'react-icons/bs';
 
 import { CANVAS_SIZE } from '@/common/constants/canvasSize';
@@ -35,19 +35,14 @@ const Canvas = () => {
 
   const { handleUndo, handleRedo } = useMovesHandlers(clearOnYourMove);
 
+  const dragControls = useDragControls();
+
   useEffect(() => {
     setDragging(false);
   }, []);
 
   // SETUP
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      setDragging(e.ctrlKey);
-    };
-
-    window.addEventListener('keyup', handleKey);
-    window.addEventListener('keydown', handleKey);
-
     const undoBtn = undoRef.current;
     const redoBtn = redoRef.current;
 
@@ -55,8 +50,6 @@ const Canvas = () => {
     redoBtn?.addEventListener('click', handleRedo);
 
     return () => {
-      window.removeEventListener('keyup', handleKey);
-      window.removeEventListener('keydown', handleKey);
       undoBtn?.removeEventListener('click', handleUndo);
       redoBtn?.removeEventListener('click', handleRedo);
     };
@@ -83,11 +76,24 @@ const Canvas = () => {
           top: -(CANVAS_SIZE.height - height),
           bottom: 0,
         }}
+        dragControls={dragControls}
         dragElastic={0}
         dragTransition={{ power: 0, timeConstant: 0 }}
         // HANDLERS
-        onMouseDown={(e) => handleStartDrawing(e.clientX, e.clientY)}
-        onMouseUp={handleEndDrawing}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          if (e.button === 2) {
+            setDragging(true);
+            dragControls.start(e);
+          } else handleStartDrawing(e.clientX, e.clientY);
+        }}
+        onMouseUp={(e) => {
+          if (e.button === 2) setDragging(false);
+          else handleEndDrawing();
+        }}
         onMouseMove={(e) => {
           handleDraw(e.clientX, e.clientY, e.shiftKey);
         }}
