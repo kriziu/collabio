@@ -6,10 +6,11 @@ import { useBackground } from '@/common/recoil/background';
 import { useSetSelection } from '@/common/recoil/options';
 import { useMyMoves, useRoom } from '@/common/recoil/room';
 import { useSetSavedMoves } from '@/common/recoil/savedMoves';
+import { Move } from '@/common/types/global';
 
-import { useCtx } from './useCtx';
+import { useCtx } from '../modules/board/hooks/useCtx';
 import { useRefs } from './useRefs';
-import { useSelection } from './useSelection';
+import { useSelection } from '../modules/board/hooks/useSelection';
 
 let prevMovesLength = 0;
 

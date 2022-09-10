@@ -1,14 +1,10 @@
 import { useRoom } from '@/common/recoil/room';
 
 import RoomContextProvider from '../context/Room.context';
-import Canvas from './board/Canvas';
-import MousePosition from './board/MousePosition';
-import MousesRenderer from './board/MousesRenderer';
-import MoveImage from './board/MoveImage';
-import SelectionBtns from './board/SelectionBtns';
-import Chat from './chat/Chat';
+import Board from '../modules/board';
+import Chat from '../modules/chat';
+import ToolBar from '../modules/toolbar';
 import NameInput from './NameInput';
-import ToolBar from './toolbar/ToolBar';
 import UserList from './UserList';
 
 const Room = () => {
@@ -21,11 +17,7 @@ const Room = () => {
       <div className="relative h-full w-full overflow-hidden">
         <UserList />
         <ToolBar />
-        <SelectionBtns />
-        <MoveImage />
-        <Canvas />
-        <MousePosition />
-        <MousesRenderer />
+        <Board />
         <Chat />
       </div>
     </RoomContextProvider>

@@ -1,5 +1,7 @@
 import { atom } from 'recoil';
 
+import { ClientRoom } from '@/common/types/global';
+
 export const DEFAULT_ROOM = {
   id: '',
   users: new Map(),

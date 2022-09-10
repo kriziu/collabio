@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { getNextColor } from '@/common/lib/getNextColor';
+import { Move } from '@/common/types/global';
 
 import { DEFAULT_ROOM, roomAtom } from './room.atom';
 

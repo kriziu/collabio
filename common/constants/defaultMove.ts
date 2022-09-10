@@ -1,3 +1,5 @@
+import { Move } from '../types/global';
+
 export const DEFAULT_MOVE: Move = {
   circle: {
     cX: 0,

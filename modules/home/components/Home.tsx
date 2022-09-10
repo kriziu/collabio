@@ -3,8 +3,8 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { socket } from '@/common/lib/socket';
-import { useModal } from '@/common/recoil/modal';
 import { useSetRoomId } from '@/common/recoil/room';
+import { useModal } from '@/modules/modal';
 
 import NotFoundModal from '../modals/NotFound';
 

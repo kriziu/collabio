@@ -16,6 +16,7 @@ import { COLORS_ARRAY } from '@/common/constants/colors';
 import { socket } from '@/common/lib/socket';
 import { useSetUsers } from '@/common/recoil/room';
 import { useSetRoom, useRoom } from '@/common/recoil/room/room.hooks';
+import { Move, User } from '@/common/types/global';
 
 export const roomContext = createContext<{
   x: MotionValue<number>;

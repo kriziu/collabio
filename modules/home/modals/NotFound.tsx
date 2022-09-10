@@ -1,6 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
 
-import { useModal } from '@/common/recoil/modal';
+import { useModal } from '@/modules/modal';
 
 const NotFoundModal = ({ id }: { id: string }) => {
   const { closeModal } = useModal();

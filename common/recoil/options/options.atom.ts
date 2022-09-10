@@ -1,5 +1,7 @@
 import { atom } from 'recoil';
 
+import { CtxOptions } from '@/common/types/global';
+
 export const optionsAtom = atom<CtxOptions>({
   key: 'options',
   default: {
